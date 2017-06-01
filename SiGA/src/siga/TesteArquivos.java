@@ -22,10 +22,10 @@ public class TesteArquivos {
                 String[] partesAcademico = linhaAcademico.split(Pattern.quote(","));
 
                 // System.out.println(partesCatracaAluno[3] + " - " + partesAcademico[1]);
-                if (partesCatracaAluno[3].equals(partesAcademico[1].toString().trim())) {
+                if (partesCatracaAluno[3].equals(partesAcademico[1])) {
                     //System.out.println(partesCatracaAluno[3]);
                     //String nome, String matricula, String turma, String codigo, String validadeAcesso, String permissao, String 
-                    Aluno aluno = new Aluno(partesCatracaAluno[3].toString(), partesCatracaAluno[1].toString(),  partesCatracaAluno[2].toString(), partesCatracaAluno[0].toString(), partesCatracaAluno[4].toString(), partesCatracaAluno[5].toString(), partesAcademico[4].toString(),partesAcademico[3].toString());        
+                    Aluno aluno = new Aluno(partesCatracaAluno[3], partesCatracaAluno[1],  partesCatracaAluno[2], partesCatracaAluno[0], partesCatracaAluno[4], partesCatracaAluno[5], partesAcademico[4],partesAcademico[3]);        
                     alunos.add(aluno);
                     break;
                 }
@@ -60,19 +60,42 @@ public class TesteArquivos {
         return resposta;
     }
 
+    public static ArrayList<Evento> ProcessaEventos(ArrayList<String> CatracaEventos){
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+        
+        //String sequencia, String dataHora, String nomeAreaOrigem, String nomeAreaDestino, String usuario, String matricula, String nome)
+        for (String linha : CatracaEventos) {
+            //Estrutura catraca-eventos: SEQUENCIA, DATAHORA, NOMEAREAORIGEM, USUARIO, MATRICULA, NOME
+            String[] partesCatracaEvento = linha.split(Pattern.quote(","));
+            Evento evento = new Evento(partesCatracaEvento[0], partesCatracaEvento[1], partesCatracaEvento[2], partesCatracaEvento[3], partesCatracaEvento[4], partesCatracaEvento[5], partesCatracaEvento[6]);
+            eventos.add(evento);
+        }
+        System.out.println(eventos.size());
+        return eventos;
+    }
+    
     public static void main(String[] args) {
 
         ArrayList<Aluno> alunos = new ArrayList<Aluno>();
 
         ArrayList<String> CatracaAluno = new ArrayList<String>();
         ArrayList<String> Academico = new ArrayList<String>();
+        ArrayList<String> CatracaEventos = new ArrayList<String>();
 
         CatracaAluno = ExtraiArquivoTexto("db-catraca-usuarios.csv");
         Academico = ExtraiArquivoTexto("db-academico.csv");
+        CatracaEventos = ExtraiArquivoTexto("db-catraca-eventos.csv");
 
         alunos = ProcessaArquivos(CatracaAluno, Academico);
+        
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+        eventos = ProcessaEventos(CatracaEventos);
 
-        System.out.println(alunos.size());
+        //System.out.println(alunos.size());
+        
+        
+        
+        
         
     }
 
