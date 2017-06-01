@@ -5,6 +5,8 @@
  */
 package siga;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author aluno
@@ -19,7 +21,8 @@ public class Aluno {
         String permissao; 
         String situacao;
         String turno;
-
+        ArrayList<Evento> eventos;
+        
     public Aluno(String nome, String matricula, String turma, String codigo, String validadeAcesso, String permissao, String situacao, String turno) {
         this.nome = nome;
         this.matricula = matricula;
@@ -29,6 +32,7 @@ public class Aluno {
         this.permissao = permissao;
         this.situacao = situacao;
         this.turno = turno;
+        this.eventos = new ArrayList<Evento>();
     }
 
     @Override
