@@ -1,5 +1,8 @@
 package siga;
 
+import telas.Login;
+import arquivos.ExtraiDados;
+
 /**
  *
  * @author aluno
@@ -11,6 +14,9 @@ public class Principal {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        ExtraiDados extrair = new ExtraiDados("1","2","3");
+        
         Login login = new Login();
                
         login.setVisible(true);

@@ -1,5 +1,7 @@
-package siga;
+package arquivos;
 
+import arquivos.Evento;
+import arquivos.Aluno;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,7 +11,7 @@ import java.util.regex.Pattern;
  *
  * @author aluno
  */
-public class TesteArquivos {
+public class TesteExtracao {
 
     public static ArrayList<Aluno> ProcessaArquivos(ArrayList<String> CatracaAluno, ArrayList<String> Academico, ArrayList<Evento> Eventos) {
         ArrayList<Aluno> Alunos = new ArrayList<Aluno>();
@@ -107,7 +109,7 @@ public class TesteArquivos {
         eventos = ProcessaEventos(CatracaEventos);
 
         alunos = ProcessaArquivos(CatracaAluno, Academico, eventos);
-        //System.out.println(alunos.size());        
+        System.out.println(alunos.size());        
 
     }
 

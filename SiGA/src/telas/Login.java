@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package siga;
+package telas;
 
 import javax.swing.JOptionPane;
+import siga.Senhas;
 
 /**
  *
