@@ -52,11 +52,12 @@ public class ExtraiDados {
 
             if (aluno != null) {
                 for (Evento evento : Eventos) {
-                    if (evento.nome.equals(aluno.nome)) {
+                    if (evento.getNome().equals(aluno.getNome())) {
                         //System.out.println(aluno.nome);
-                        evento.aluno = aluno;
+                        evento.setAluno(aluno);
                         try {
-                            aluno.eventos.add(evento);
+                            aluno.setEventos(Eventos);
+                            //aluno.eventos.add(evento);
                         } catch (Exception ex) {
                             System.out.println(ex.toString());
                         };

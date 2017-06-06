@@ -17,9 +17,10 @@ public class Principal {
         
         ExtraiDados extrair = new ExtraiDados("1","2","3");
         
-        Login login = new Login();
+        
+        //Login login = new Login();
                
-        login.setVisible(true);
+        //login.setVisible(true);
         
     }
     

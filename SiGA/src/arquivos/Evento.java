@@ -21,20 +21,20 @@ import java.util.logging.Logger;
  */
 public class Evento {
 
-    String sequencia;
-    Calendar dataHora;
-    String nomeAreaOrigem;
-    String nomeAreaDestino;
-    String usuario;
-    String matricula;
-    String nome;
-    Aluno aluno;
+    private String sequencia;
+    private Calendar dataHora;
+    private String nomeAreaOrigem;
+    private String nomeAreaDestino;
+    private String usuario;
+    private String matricula;
+    private String nome;
+    private Aluno aluno;
 
-    Boolean entrada;
-    Boolean saidaAdiantada;
-    Boolean entradaAtrasada;
-    int minutosAdiantados;
-    int minutosAtrasados;
+    private Boolean entrada;
+    private Boolean saidaAdiantada;
+    private Boolean entradaAtrasada;
+    private int minutosAdiantados;
+    private int minutosAtrasados;
 
     public Evento(String sequencia, String dataHoraString, String nomeAreaOrigem, String nomeAreaDestino, String usuario, String matricula, String nome) {
         this.sequencia = sequencia;
@@ -64,7 +64,7 @@ public class Evento {
 
     public Boolean getSaidaAdiantada() {
         if (this.aluno != null) {
-            String turno = this.aluno.turno;
+            String turno = this.aluno.getTurno();
             switch (turno) {
                 case "M":
                    // this.dataHora.add()
@@ -74,17 +74,103 @@ public class Evento {
         return saidaAdiantada;
     }
 
+    public String getSequencia() {
+        return sequencia;
+    }
+
+    public void setSequencia(String sequencia) {
+        this.sequencia = sequencia;
+    }
+
+    public Calendar getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(Calendar dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public String getNomeAreaOrigem() {
+        return nomeAreaOrigem;
+    }
+
+    public void setNomeAreaOrigem(String nomeAreaOrigem) {
+        this.nomeAreaOrigem = nomeAreaOrigem;
+    }
+
+    public String getNomeAreaDestino() {
+        return nomeAreaDestino;
+    }
+
+    public void setNomeAreaDestino(String nomeAreaDestino) {
+        this.nomeAreaDestino = nomeAreaDestino;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
+    }
+
+    public Boolean getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(Boolean entrada) {
+        this.entrada = entrada;
+    }
+
     public Boolean getEntradaAtrasada() {
         return entradaAtrasada;
+    }
+
+    public void setEntradaAtrasada(Boolean entradaAtrasada) {
+        this.entradaAtrasada = entradaAtrasada;
     }
 
     public int getMinutosAdiantados() {
         return minutosAdiantados;
     }
 
+    public void setMinutosAdiantados(int minutosAdiantados) {
+        this.minutosAdiantados = minutosAdiantados;
+    }
+
     public int getMinutosAtrasados() {
         return minutosAtrasados;
     }
+
+    public void setMinutosAtrasados(int minutosAtrasados) {
+        this.minutosAtrasados = minutosAtrasados;
+    }
+
+    
 
     @Override
     public String toString() {
