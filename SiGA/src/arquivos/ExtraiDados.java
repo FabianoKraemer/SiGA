@@ -21,6 +21,25 @@ public class ExtraiDados {
     private String dbAcademico;
     private String dbCatracaEventos;
 
+    private ArrayList<Evento> eventos;
+    private ArrayList<Aluno> alunos;
+
+    public ArrayList<Evento> getEventos() {
+        return eventos;
+    }
+
+    public void setEventos(ArrayList<Evento> eventos) {
+        this.eventos = eventos;
+    }
+
+    public ArrayList<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(ArrayList<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+    
     public ExtraiDados(String dbCatracaUsuarios, String dbAcademico, String dbCatracaEventos) {
         this.dbCatracaUsuarios = dbCatracaUsuarios;
         this.dbAcademico = dbAcademico;
@@ -91,12 +110,10 @@ public class ExtraiDados {
         
       
       
-      //Stream<Aluno> alunosAtrasados = Alunos.stream().filter(p -> p.getEventos() > 18);
-
-       Stream<Evento> alunosAtrasados = Eventos.stream().filter(p -> p.getEntradaAtrasada());
+      /* Stream<Evento> alunosAtrasados = Eventos.stream().filter(p -> p.getSaidaAdiantada());
         for (Evento evento : alunosAtrasados.toArray(Evento[]::new)) {
-            System.out.println(evento.getAluno().getNome());
-        }
+            System.out.println(evento.getAluno().getNome() + evento.getMinutosAdiantados());
+        }*/
       
         return Alunos;
 
@@ -153,9 +170,13 @@ public class ExtraiDados {
 
         ArrayList<Evento> eventos = new ArrayList<Evento>();
         eventos = ProcessaEventos(CatracaEventos);
-
+        
         alunos = ProcessaArquivos(CatracaAluno, Academico, eventos);
-        System.out.println(alunos.size());
+        
+        setAlunos(alunos);
+        setEventos(eventos);
+        
+        System.out.println("Alunos lidos de arquivos: " + alunos.size());
 
     }
 

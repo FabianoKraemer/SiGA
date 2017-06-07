@@ -241,13 +241,13 @@ public class Evento {
             String turno = this.aluno.getTurno();
             switch (turno) {
                 case "M":                    
-                    return this.getDataHora().getTimeInMillis() / 60000 - this.getFimHoraTurnoManha().getTimeInMillis() / 60000;
+                    return this.getFimHoraTurnoManha().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000;
 
                 case "T":
-                    return this.getDataHora().getTimeInMillis() / 60000 - this.getFimHoraTurnoTarde().getTimeInMillis() / 60000;
+                    return this.getFimHoraTurnoTarde().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000 ;
 
                 case "N":
-                    return this.getDataHora().getTimeInMillis() / 60000 - this.getFimHoraTurnoNoite().getTimeInMillis() / 60000;
+                    return this.getFimHoraTurnoNoite().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000;
             }
         }
         return 0;
