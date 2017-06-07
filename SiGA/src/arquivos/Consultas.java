@@ -6,7 +6,10 @@
 package arquivos;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,27 +66,30 @@ Consulta 3 - Quantidade Total de Faltas
 	Saída:
 		Lista de datas que houveram faltas que não seja Sábado ou Domingo;
      */
-    public ArrayList<Evento> consultaEventosComAtrasoDeEntrada(String Curso, String Turma, long MinutosDeAtrasoDeEntrada, Aluno aluno) {
-        ArrayList<Evento> eventosResposta = new ArrayList<Evento>();
-        Stream<Evento> eventosAlunosAtrasados = getEventos().stream().filter(p -> p.getEntradaAtrasada()
+    
+    
+    
+    //Consultas Baseadas em Eventos
+    private List<Evento> consultaEventosComAtrasoDeEntrada(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
+
+        List<Evento> eventosResposta = getEventos().stream().filter(p -> p.getEntradaAtrasada()
                 && p.getMinutosAtrasados() >= MinutosDeAtrasoDeEntrada
-        );
+        ).collect(Collectors.toList());
 
-        eventosAlunosAtrasados.forEach((evento) -> eventosResposta.add(evento));
-        /*for (Evento evento : alunosAtrasados.toArray(Evento[]::new)) {
-            eventosResposta.add(evento);            
-        }
-         */
-
-        /*Map<Aluno, ArrayList<Evento>> groupByAluno;
-        groupByAluno = eventosAlunosAtrasados.collect(Collectors.groupingBy(Evento::getAluno));
-        System.out.println(groupByAluno);
-*/
         return eventosResposta;
     }
 
+    private List<Evento> consultaEventosComAdiantoDeSaida(String Curso, String Turma, long MinutosDeAdiantoDeSaida) {
+
+        List<Evento> eventosResposta = getEventos().stream().filter(p -> p.getSaidaAdiantada()
+                && p.getMinutosAdiantados() >= MinutosDeAdiantoDeSaida).collect(Collectors.toList());
+
+        return eventosResposta;
+
+    }
+
     /*
-Consultas Baseadas em Eventos
+    
  
 Consulta 4 - Quantidade de Dias com Determinado Minutos de Atraso
 	Entrada:
@@ -92,7 +98,28 @@ Consulta 4 - Quantidade de Dias com Determinado Minutos de Atraso
 	Saída:
 Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Início da Disciplina e o registro de Entrada da Catraca;
  
-    
+     */
+    public Map<Aluno, List<Evento>> consultaAlunosComAtrasoDeEntrada(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
+
+        List<Evento> listaEventos = consultaEventosComAtrasoDeEntrada(Curso, Turma, MinutosDeAtrasoDeEntrada);
+
+        Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
+
+        /*
+        Set<Aluno> keys = groupByAluno.keySet();
+        for (Aluno alunoMap : keys) {
+            System.out.println("Aluno : " + alunoMap.getNome());
+            for (Evento evento : groupByAluno.get(alunoMap))
+            {
+                System.out.println("    Evento: " + evento.getDataHoraPorExtenso());
+            }
+        }
+         */
+        return groupByAluno;
+    }
+
+    /*
+
 Consulta 5 - Quantidade de Dias Superior ao Informado com Determinado Minutos de Atraso
 	Entrada:
 		1 - Curso; 2 - Turma; 3 - Disciplina; 4 - Data Inicial da Consulta;	5 - Quantidade de Minutos de Atraso; 6- Quantidade de Dias com Atraso; 7 - Aluno (opcional); 
@@ -101,12 +128,30 @@ Consulta 5 - Quantidade de Dias Superior ao Informado com Determinado Minutos de
 Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Início da Disciplina e o registro de Entrada da Catraca;
      
      */
-    public ArrayList<Evento> consultaEventosComAdiantoDeSaida(String Curso, String Turma, long MinutosDeAdiantoDeSaida, Aluno aluno) {
-        ArrayList<Evento> eventosResposta = new ArrayList<Evento>();
-        Stream<Evento> eventosAlunosAdiantados = getEventos().stream().filter(p -> p.getSaidaAdiantada() && p.getMinutosAdiantados() >= MinutosDeAdiantoDeSaida);
+    public Map<Aluno, List<Evento>> consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(String Curso, String Turma, long MinutosDeAtrasoDeEntrada, int quantidadeDeDias) {
 
-        eventosAlunosAdiantados.forEach((evento) -> eventosResposta.add(evento));
-        return eventosResposta;
+        List<Evento> listaEventos = consultaEventosComAtrasoDeEntrada(Curso, Turma, MinutosDeAtrasoDeEntrada);
+
+        Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
+
+        /*
+        Set<Aluno> keys = groupByAluno.keySet();
+        for (Aluno alunoMap : keys) {
+            System.out.println("Aluno : " + alunoMap.getNome());
+            for (Evento evento : groupByAluno.get(alunoMap))
+            {
+                System.out.println("    Evento: " + evento.getDataHoraPorExtenso());
+            }
+        }
+         */
+        //Remove Alunos que ainda não tem a quantidade de dias especificado
+        for (Iterator<Map.Entry<Aluno, List<Evento>>> it = groupByAluno.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Aluno, List<Evento>> entry = it.next();
+            if (entry.getValue().size() < quantidadeDeDias) {
+                it.remove();
+            }
+        }
+        return groupByAluno;
     }
 
     /*    
@@ -117,7 +162,17 @@ Consulta 6 - Quantidade de Dias com Determinado Minutos de Saída Adiantada
  
 	Saída:
 Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Fim da Disciplina e o registro de Saída da Catraca;
- 
+     */
+    public Map<Aluno, List<Evento>> consultaAlunosComAdiantoDeSaida(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
+
+        List<Evento> listaEventos = consultaEventosComAdiantoDeSaida(Curso, Turma, MinutosDeAtrasoDeEntrada);
+
+        Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
+
+        return groupByAluno;
+    }
+
+    /*
 Consulta 7 - Quantidade de Dias Superior ao Informado com Determinado Minutos de Saída Adiantada
 	Entrada:
 		1 - Curso; 2 - Turma; 3 - Disciplina; 4 - Aluno (opcional); 5 - Data Inicial da Consulta;	6 - Quantidade de Minutos de Saída Adiantada; 7 - Quantidade de Dias de Saída Adiantada;
@@ -125,4 +180,19 @@ Consulta 7 - Quantidade de Dias Superior ao Informado com Determinado Minutos de
 	Saída:
 Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Fim da Disciplina e o registro de Saída da Catraca;
      */
+    public Map<Aluno, List<Evento>> consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(String Curso, String Turma, long MinutosDeAtrasoDeEntrada, int quantidadeDeDias) {
+
+        List<Evento> listaEventos = consultaEventosComAdiantoDeSaida(Curso, Turma, MinutosDeAtrasoDeEntrada);
+
+        Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
+
+        //Remove Alunos que ainda não tem a quantidade de dias especificado
+        for (Iterator<Map.Entry<Aluno, List<Evento>>> it = groupByAluno.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Aluno, List<Evento>> entry = it.next();
+            if (entry.getValue().size() < quantidadeDeDias) {
+                it.remove();
+            }
+        }
+        return groupByAluno;
+    }
 }

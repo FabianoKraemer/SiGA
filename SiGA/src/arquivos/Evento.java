@@ -31,8 +31,7 @@ public class Evento {
     public Calendar getData() {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Calendar cal = getDataHora();
-        //System.out.println(this.dataHora.toString());
-        //System.out.println(f.format(cal)); //2016/11/16 12:08:43
+
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -141,6 +140,11 @@ public class Evento {
         return (Calendar) dataHora.clone();
     }
 
+    public String getDataHoraPorExtenso() {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        return f.format(getDataHora().getTime()).toString();
+    }
+
     public void setDataHora(Calendar dataHora) {
         this.dataHora = dataHora;
     }
@@ -197,11 +201,6 @@ public class Evento {
         return entrada;
     }
 
-    /*
-    public void setEntrada(Boolean entrada) {
-        this.entrada = entrada;
-    }
-     */
     public Boolean getSaidaAdiantada() {
         if (this.aluno != null && !this.entrada) {
             String turno = this.aluno.getTurno();
@@ -232,19 +231,15 @@ public class Evento {
         return false;
     }
 
-    /* public void setEntradaAtrasada(Boolean entradaAtrasada) {
-        this.entradaAtrasada = entradaAtrasada;
-    }
-     */
     public long getMinutosAdiantados() {
         if (this.aluno != null && !this.entrada) {
             String turno = this.aluno.getTurno();
             switch (turno) {
-                case "M":                    
+                case "M":
                     return this.getFimHoraTurnoManha().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000;
 
                 case "T":
-                    return this.getFimHoraTurnoTarde().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000 ;
+                    return this.getFimHoraTurnoTarde().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000;
 
                 case "N":
                     return this.getFimHoraTurnoNoite().getTimeInMillis() / 60000 - this.getDataHora().getTimeInMillis() / 60000;
@@ -262,7 +257,6 @@ public class Evento {
             String turno = this.aluno.getTurno();
             switch (turno) {
                 case "M":
-                    //long diff = this.dataHora.getTime() - this.getFimHoraTurnoManha().getTime();//as given
                     return this.getDataHora().getTimeInMillis() / 60000 - this.getInicioHoraTurnoManha().getTimeInMillis() / 60000;
 
                 case "T":
