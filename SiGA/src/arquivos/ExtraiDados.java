@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  *
@@ -56,7 +57,7 @@ public class ExtraiDados {
                         //System.out.println(aluno.nome);
                         evento.setAluno(aluno);                        
 
-                        if (!evento.getEntrada()) {
+                       /* if (!evento.getEntrada()) {
                             if (evento.getSaidaAdiantada()) {
                                 System.out.println(aluno.getNome() + " Saída Adiantada ");
                                 System.out.println("Minutos Adiantado? " + evento.getMinutosAdiantados());
@@ -66,7 +67,7 @@ public class ExtraiDados {
                                 System.out.println(aluno.getNome() + " Entrada Atrasada ");
                                 System.out.println("Minutos Atrasado? " + evento.getMinutosAtrasados());
                             }
-                        }
+                        }*/
                         try {
                             aluno.getEventos().add(evento);
                             //aluno.eventos.add(evento);
@@ -88,6 +89,15 @@ public class ExtraiDados {
         }
         */
         
+      
+      
+      //Stream<Aluno> alunosAtrasados = Alunos.stream().filter(p -> p.getEventos() > 18);
+
+       Stream<Evento> alunosAtrasados = Eventos.stream().filter(p -> p.getEntradaAtrasada());
+        for (Evento evento : alunosAtrasados.toArray(Evento[]::new)) {
+            System.out.println(evento.getAluno().getNome());
+        }
+      
         return Alunos;
 
     }
