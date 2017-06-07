@@ -15,7 +15,7 @@ public class Principal {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        ExtraiDados extrair = new ExtraiDados("1","2","3");
+        ExtraiDados extrair = new ExtraiDados(null,null,null);
         
         
         //Login login = new Login();

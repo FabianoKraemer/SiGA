@@ -11,18 +11,20 @@ import java.util.ArrayList;
  *
  * @author aluno
  */
+
 public class Aluno {
-    
-        private String nome;
-        private String matricula;
-        private String turma;
-        private String codigo;
-        private String validadeAcesso;
-        private String permissao; 
-        private String situacao;
-        private String turno;
-        private ArrayList<Evento> eventos;
-        
+    public enum Turno {MANHA, TARDE, NOITE }
+
+    private String nome;
+    private String matricula;
+    private String turma;
+    private String codigo;
+    private String validadeAcesso;
+    private String permissao;
+    private String situacao;
+    private String turno;
+    private ArrayList<Evento> eventos;
+
     public Aluno(String nome, String matricula, String turma, String codigo, String validadeAcesso, String permissao, String situacao, String turno) {
         this.nome = nome;
         this.matricula = matricula;
@@ -112,6 +114,4 @@ public class Aluno {
         this.eventos = eventos;
     }
 
-    
-        
 }

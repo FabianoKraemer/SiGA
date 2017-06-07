@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
  * @author Fabiano
  */
 public class ExtraiDados {
-    
-        private String dbCatracaUsuarios;
-        private String dbAcademico;
-        private String dbCatracaEventos;
+
+    private String dbCatracaUsuarios;
+    private String dbAcademico;
+    private String dbCatracaEventos;
 
     public ExtraiDados(String dbCatracaUsuarios, String dbAcademico, String dbCatracaEventos) {
         this.dbCatracaUsuarios = dbCatracaUsuarios;
@@ -26,7 +26,7 @@ public class ExtraiDados {
         this.dbCatracaEventos = dbCatracaEventos;
         this.criaArrays();
     }
-        
+
     public ArrayList<Aluno> ProcessaArquivos(ArrayList<String> CatracaAluno, ArrayList<String> Academico, ArrayList<Evento> Eventos) {
         ArrayList<Aluno> Alunos = new ArrayList<Aluno>();
 
@@ -54,9 +54,21 @@ public class ExtraiDados {
                 for (Evento evento : Eventos) {
                     if (evento.getNome().equals(aluno.getNome())) {
                         //System.out.println(aluno.nome);
-                        evento.setAluno(aluno);
+                        evento.setAluno(aluno);                        
+
+                        if (!evento.getEntrada()) {
+                            if (evento.getSaidaAdiantada()) {
+                                System.out.println(aluno.getNome() + " Saída Adiantada ");
+                                System.out.println("Minutos Adiantado? " + evento.getMinutosAdiantados());
+                            }
+                        } else {
+                            if (evento.getEntradaAtrasada()) {
+                                System.out.println(aluno.getNome() + " Entrada Atrasada ");
+                                System.out.println("Minutos Atrasado? " + evento.getMinutosAtrasados());
+                            }
+                        }
                         try {
-                            aluno.setEventos(Eventos);
+                            aluno.getEventos().add(evento);
                             //aluno.eventos.add(evento);
                         } catch (Exception ex) {
                             System.out.println(ex.toString());
@@ -68,6 +80,14 @@ public class ExtraiDados {
             }
         }
 
+      /*  for (Aluno aluno : Alunos) {
+            System.out.println("Aluno: " + aluno.getNome() + " Turno:" + aluno.getTurno());
+            for (Evento evento : aluno.getEventos()) {
+                System.out.println("    -- Evento Entrada:" + evento.getEntrada() + " - " + evento.getDataHora().getTime().toString());
+            }
+        }
+        */
+        
         return Alunos;
 
     }
@@ -115,9 +135,9 @@ public class ExtraiDados {
         ArrayList<String> CatracaAluno = new ArrayList<String>();
         ArrayList<String> Academico = new ArrayList<String>();
         ArrayList<String> CatracaEventos = new ArrayList<String>();
-        
+
         //o endereço do arquivo será o this.string de cada um, enviado pelo método que chama essa classe
-        CatracaAluno = ExtraiArquivoTexto("db-catraca-usuarios.csv"); 
+        CatracaAluno = ExtraiArquivoTexto("db-catraca-usuarios.csv");
         Academico = ExtraiArquivoTexto("db-academico.csv");
         CatracaEventos = ExtraiArquivoTexto("db-catraca-eventos.csv");
 
@@ -125,8 +145,8 @@ public class ExtraiDados {
         eventos = ProcessaEventos(CatracaEventos);
 
         alunos = ProcessaArquivos(CatracaAluno, Academico, eventos);
-        System.out.println(alunos.size());        
+        System.out.println(alunos.size());
 
-    }     
-    
+    }
+
 }

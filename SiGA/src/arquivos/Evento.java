@@ -21,6 +21,73 @@ import java.util.logging.Logger;
  */
 public class Evento {
 
+    private Calendar inicioHoraTurnoManha;
+    private Calendar fimHoraTurnoManha;
+    private Calendar inicioHoraTurnoTarde;
+    private Calendar fimHoraTurnoTarde;
+    private Calendar inicioHoraTurnoNoite;
+    private Calendar fimHoraTurnoNoite;
+
+    public Calendar getData() {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Calendar cal = getDataHora();
+        //System.out.println(this.dataHora.toString());
+        //System.out.println(f.format(cal)); //2016/11/16 12:08:43
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+
+        return cal;
+    }
+
+    public Calendar getInicioHoraTurnoManha() {
+        Calendar data = getData();
+        data.add(Calendar.HOUR_OF_DAY, 7);
+        data.add(Calendar.MINUTE, 30);
+        inicioHoraTurnoManha = data;
+        return inicioHoraTurnoManha;
+    }
+
+    public Calendar getFimHoraTurnoManha() {
+        Calendar data = getData();
+        data.add(Calendar.HOUR_OF_DAY, 11);
+        data.add(Calendar.MINUTE, 30);
+        fimHoraTurnoManha = data;
+        return fimHoraTurnoManha;
+    }
+
+    public Calendar getInicioHoraTurnoTarde() {
+        Calendar data = getData();
+        data.add(Calendar.HOUR_OF_DAY, 13);
+        data.add(Calendar.MINUTE, 30);
+        inicioHoraTurnoTarde = data;
+        return inicioHoraTurnoTarde;
+    }
+
+    public Calendar getFimHoraTurnoTarde() {
+        Calendar data = getData();
+        data.add(Calendar.HOUR_OF_DAY, 17);
+        data.add(Calendar.MINUTE, 30);
+        fimHoraTurnoTarde = data;
+        return fimHoraTurnoTarde;
+    }
+
+    public Calendar getInicioHoraTurnoNoite() {
+        Calendar data = getData();
+        data.add(Calendar.HOUR_OF_DAY, 19);
+        data.add(Calendar.MINUTE, 30);
+        inicioHoraTurnoNoite = data;
+        return inicioHoraTurnoNoite;
+    }
+
+    public Calendar getFimHoraTurnoNoite() {
+        Calendar data = getData();
+        data.add(Calendar.HOUR_OF_DAY, 22);
+        data.add(Calendar.MINUTE, 30);
+        fimHoraTurnoManha = data;
+        return fimHoraTurnoManha;
+    }
+
     private String sequencia;
     private Calendar dataHora;
     private String nomeAreaOrigem;
@@ -39,12 +106,12 @@ public class Evento {
     public Evento(String sequencia, String dataHoraString, String nomeAreaOrigem, String nomeAreaDestino, String usuario, String matricula, String nome) {
         this.sequencia = sequencia;
         this.dataHora = Calendar.getInstance();
-        
+
         try {
             //2017-04-03 12:09:02.0000000
             SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
             this.dataHora.setTime(f.parse(dataHoraString));
-                        
+
         } catch (ParseException ex) {
             Logger.getLogger(Evento.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -62,18 +129,6 @@ public class Evento {
         }
     }
 
-    public Boolean getSaidaAdiantada() {
-        if (this.aluno != null) {
-            String turno = this.aluno.getTurno();
-            switch (turno) {
-                case "M":
-                   // this.dataHora.add()
-                    break;
-            }
-        }
-        return saidaAdiantada;
-    }
-
     public String getSequencia() {
         return sequencia;
     }
@@ -83,7 +138,7 @@ public class Evento {
     }
 
     public Calendar getDataHora() {
-        return dataHora;
+        return (Calendar) dataHora.clone();
     }
 
     public void setDataHora(Calendar dataHora) {
@@ -142,35 +197,87 @@ public class Evento {
         return entrada;
     }
 
+    /*
     public void setEntrada(Boolean entrada) {
         this.entrada = entrada;
     }
+     */
+    public Boolean getSaidaAdiantada() {
+        if (this.aluno != null && !this.entrada) {
+            String turno = this.aluno.getTurno();
+            switch (turno) {
+                case "M":
+                    return this.getDataHora().before(this.getFimHoraTurnoManha()) && this.getDataHora().after(this.getInicioHoraTurnoManha());
+                case "T":
+                    return this.getDataHora().before(this.getFimHoraTurnoTarde()) && this.getDataHora().after(this.getInicioHoraTurnoTarde());
+                case "N":
+                    return this.getDataHora().before(this.getFimHoraTurnoNoite()) && this.getDataHora().after(this.getInicioHoraTurnoNoite());
+            }
+        }
+        return false;
+    }
 
     public Boolean getEntradaAtrasada() {
-        return entradaAtrasada;
+        if (this.aluno != null && this.entrada) {
+            String turno = this.aluno.getTurno();
+            switch (turno) {
+                case "M":
+                    return this.getDataHora().after(this.getInicioHoraTurnoManha()) && this.getDataHora().before(this.getFimHoraTurnoManha());
+                case "T":
+                    return this.getDataHora().after(this.getInicioHoraTurnoTarde()) && this.getDataHora().before(this.getFimHoraTurnoTarde());
+                case "N":
+                    return this.getDataHora().after(this.getInicioHoraTurnoNoite());// && this.getDataHora().before(this.getFimHoraTurnoNoite());
+            }
+        }
+        return false;
     }
 
-    public void setEntradaAtrasada(Boolean entradaAtrasada) {
+    /* public void setEntradaAtrasada(Boolean entradaAtrasada) {
         this.entradaAtrasada = entradaAtrasada;
     }
+     */
+    public long getMinutosAdiantados() {
+        if (this.aluno != null && !this.entrada) {
+            String turno = this.aluno.getTurno();
+            switch (turno) {
+                case "M":                    
+                    return this.getDataHora().getTimeInMillis() / 60000 - this.getFimHoraTurnoManha().getTimeInMillis() / 60000;
 
-    public int getMinutosAdiantados() {
-        return minutosAdiantados;
+                case "T":
+                    return this.getDataHora().getTimeInMillis() / 60000 - this.getFimHoraTurnoTarde().getTimeInMillis() / 60000;
+
+                case "N":
+                    return this.getDataHora().getTimeInMillis() / 60000 - this.getFimHoraTurnoNoite().getTimeInMillis() / 60000;
+            }
+        }
+        return 0;
     }
 
     public void setMinutosAdiantados(int minutosAdiantados) {
         this.minutosAdiantados = minutosAdiantados;
     }
 
-    public int getMinutosAtrasados() {
-        return minutosAtrasados;
+    public long getMinutosAtrasados() {
+        if (this.aluno != null && this.entrada) {
+            String turno = this.aluno.getTurno();
+            switch (turno) {
+                case "M":
+                    //long diff = this.dataHora.getTime() - this.getFimHoraTurnoManha().getTime();//as given
+                    return this.getDataHora().getTimeInMillis() / 60000 - this.getInicioHoraTurnoManha().getTimeInMillis() / 60000;
+
+                case "T":
+                    return this.getDataHora().getTimeInMillis() / 60000 - this.getInicioHoraTurnoTarde().getTimeInMillis() / 60000;
+
+                case "N":
+                    return this.getDataHora().getTimeInMillis() / 60000 - this.getInicioHoraTurnoNoite().getTimeInMillis() / 60000;
+            }
+        }
+        return 0;
     }
 
     public void setMinutosAtrasados(int minutosAtrasados) {
         this.minutosAtrasados = minutosAtrasados;
     }
-
-    
 
     @Override
     public String toString() {
