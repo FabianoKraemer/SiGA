@@ -82,6 +82,10 @@ public class Aluno {
         this.validadeAcesso = validadeAcesso;
     }
 
+    public int compareTo(Aluno anotherAluno) {
+        return nome.compareTo(anotherAluno.getNome());
+    }
+
     public String getPermissao() {
         return permissao;
     }

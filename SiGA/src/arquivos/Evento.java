@@ -73,7 +73,7 @@ public class Evento {
 
     public Calendar getInicioHoraTurnoNoite() {
         Calendar data = getData();
-        data.add(Calendar.HOUR_OF_DAY, 19);
+        data.add(Calendar.HOUR_OF_DAY, 18);
         data.add(Calendar.MINUTE, 30);
         inicioHoraTurnoNoite = data;
         return inicioHoraTurnoNoite;

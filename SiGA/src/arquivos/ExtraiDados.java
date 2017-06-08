@@ -23,6 +23,24 @@ public class ExtraiDados {
 
     private ArrayList<Evento> eventos;
     private ArrayList<Aluno> alunos;
+    private ArrayList<String> turmas;
+    private ArrayList<String> diasDaSemana;
+
+    public ArrayList<String> getDiasDaSemana() {
+        return diasDaSemana;
+    }
+
+    public void setDiasDaSemana(ArrayList<String> diasDaSemana) {
+        this.diasDaSemana = diasDaSemana;
+    }
+
+    public ArrayList<String> getTurmas() {
+        return turmas;
+    }
+
+    public void setTurmas(ArrayList<String> turmas) {
+        this.turmas = turmas;
+    }
 
     public ArrayList<Evento> getEventos() {
         return eventos;
@@ -39,7 +57,7 @@ public class ExtraiDados {
     public void setAlunos(ArrayList<Aluno> alunos) {
         this.alunos = alunos;
     }
-    
+
     public ExtraiDados(String dbCatracaUsuarios, String dbAcademico, String dbCatracaEventos) {
         this.dbCatracaUsuarios = dbCatracaUsuarios;
         this.dbAcademico = dbAcademico;
@@ -68,15 +86,16 @@ public class ExtraiDados {
                     Alunos.add(aluno);
                     break;
                 }
+
             }
 
             if (aluno != null) {
                 for (Evento evento : Eventos) {
                     if (evento.getNome().equals(aluno.getNome())) {
                         //System.out.println(aluno.nome);
-                        evento.setAluno(aluno);                        
+                        evento.setAluno(aluno);
 
-                       /* if (!evento.getEntrada()) {
+                        /* if (!evento.getEntrada()) {
                             if (evento.getSaidaAdiantada()) {
                                 System.out.println(aluno.getNome() + " Saída Adiantada ");
                                 System.out.println("Minutos Adiantado? " + evento.getMinutosAdiantados());
@@ -100,21 +119,9 @@ public class ExtraiDados {
             }
         }
 
-      /*  for (Aluno aluno : Alunos) {
-            System.out.println("Aluno: " + aluno.getNome() + " Turno:" + aluno.getTurno());
-            for (Evento evento : aluno.getEventos()) {
-                System.out.println("    -- Evento Entrada:" + evento.getEntrada() + " - " + evento.getDataHora().getTime().toString());
-            }
-        }
-        */
-        
-      
-      
-      /* Stream<Evento> alunosAtrasados = Eventos.stream().filter(p -> p.getSaidaAdiantada());
-        for (Evento evento : alunosAtrasados.toArray(Evento[]::new)) {
-            System.out.println(evento.getAluno().getNome() + evento.getMinutosAdiantados());
-        }*/
-      
+        //Ordena Alunos
+        Alunos.sort((p1, p2) -> p1.compareTo(p2));
+
         return Alunos;
 
     }
@@ -140,6 +147,21 @@ public class ExtraiDados {
         return resposta;
     }
 
+    public ArrayList<String> ProcessaTurmas(ArrayList<String> Academico) {
+        ArrayList<String> turmas = new ArrayList<String>();
+
+        for (String linha : Academico) {
+            // Estrutura Academico: NR_MATRICULA	NM_PESSOA	ID_TURMA	CD_TURNO	SITUACAO
+            String[] partesAcademico = linha.split(Pattern.quote(","));
+            if (!turmas.contains(partesAcademico[2])) {
+                turmas.add(partesAcademico[2]);
+            }
+        }
+
+        turmas.sort((p1, p2) -> p1.compareTo(p2));
+        return turmas;
+    }
+
     public ArrayList<Evento> ProcessaEventos(ArrayList<String> CatracaEventos) {
         ArrayList<Evento> eventos = new ArrayList<Evento>();
 
@@ -157,8 +179,16 @@ public class ExtraiDados {
 
     public void criaArrays() {
 
+        
+        ArrayList<String> diasDaSemana = new ArrayList<String>();
+        diasDaSemana.add("Segunda-Feira");
+        diasDaSemana.add("Terça-Feira");
+        diasDaSemana.add("Quarta-Feira");
+        diasDaSemana.add("Quinta-Feira");
+        diasDaSemana.add("Sexta-Feira");
+        setDiasDaSemana(diasDaSemana);
+        
         ArrayList<Aluno> alunos = new ArrayList<Aluno>();
-
         ArrayList<String> CatracaAluno = new ArrayList<String>();
         ArrayList<String> Academico = new ArrayList<String>();
         ArrayList<String> CatracaEventos = new ArrayList<String>();
@@ -170,12 +200,12 @@ public class ExtraiDados {
 
         ArrayList<Evento> eventos = new ArrayList<Evento>();
         eventos = ProcessaEventos(CatracaEventos);
-        
+
         alunos = ProcessaArquivos(CatracaAluno, Academico, eventos);
-        
+
         setAlunos(alunos);
         setEventos(eventos);
-        
+        setTurmas(ProcessaTurmas(Academico));
         System.out.println("Alunos lidos de arquivos: " + alunos.size());
 
     }
