@@ -8,13 +8,28 @@ package telas;
 import arquivos.Alerta;
 import arquivos.Consultas;
 import arquivos.ExtraiDados;
+import java.awt.Frame;
 import java.awt.Point;
+import javax.swing.JDialog;
 
 /**
  *
  * @author aluno
  */
-public class CadastrarAlerta extends javax.swing.JFrame {
+public class CadastrarAlerta extends JDialog {
+
+    public CadastrarAlerta(Frame owner, String title, boolean modal) {
+        super(owner, title, modal);
+        initComponents();        
+    }
+
+    public Alerta getAlerta() {
+        return alerta;
+    }
+
+    public void setAlerta(Alerta alerta) {
+        this.alerta = alerta;
+    }
 
     /**
      * Creates new form CadastrarAlerta
@@ -53,17 +68,16 @@ public class CadastrarAlerta extends javax.swing.JFrame {
         jCBDiaDaSemanaTurma = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jCBAlunosAtraso = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         jTFMinutosAtraso = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jTFQuantidadeDeDiasAtraso = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jCBAlunosAdianto = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         jTFMinutosAdianto = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jTFQuantidadeDeDiasAdianto = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
                 formWindowActivated(evt);
@@ -78,6 +92,11 @@ public class CadastrarAlerta extends javax.swing.JFrame {
         });
 
         jBCancelar.setText("Cancelar");
+        jBCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCancelarActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Aluno:");
 
@@ -190,11 +209,13 @@ public class CadastrarAlerta extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Faltas por Turma", jPanel2);
 
-        jLabel9.setText("Aluno:");
-
         jLabel10.setText("Minutos de Atraso:");
 
         jTFMinutosAtraso.setText("15");
+
+        jLabel13.setText("Quantidade Mínima de Dias");
+
+        jTFQuantidadeDeDiasAtraso.setText("3");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -203,37 +224,37 @@ public class CadastrarAlerta extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCBAlunosAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTFMinutosAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(74, Short.MAX_VALUE))
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTFMinutosAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFQuantidadeDeDiasAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(403, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jCBAlunosAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(45, 45, 45)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jTFMinutosAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(jTFQuantidadeDeDiasAtraso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Atrasos de Alunos", jPanel3);
 
-        jLabel11.setText("Aluno:");
-
         jLabel12.setText("Minutos de Adianto:");
 
         jTFMinutosAdianto.setText("15");
+
+        jLabel14.setText("Quantidade Mínima de Dias");
+
+        jTFQuantidadeDeDiasAdianto.setText("3");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -242,28 +263,26 @@ public class CadastrarAlerta extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCBAlunosAdianto, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTFMinutosAdianto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(74, Short.MAX_VALUE))
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTFQuantidadeDeDiasAdianto, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(jTFMinutosAdianto))
+                .addContainerGap(403, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jCBAlunosAdianto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(45, 45, 45)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(jTFMinutosAdianto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(jTFQuantidadeDeDiasAdianto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Adianto de Alunos", jPanel4);
@@ -302,9 +321,7 @@ public class CadastrarAlerta extends javax.swing.JFrame {
         ExtraiDados extrair = new ExtraiDados(null, null, null);
 
         extrair.getAlunos().forEach((aluno) -> {
-            jCBAlunos.addItem(aluno.getNome());
-            jCBAlunosAdianto.addItem(aluno.getNome());
-            jCBAlunosAtraso.addItem(aluno.getNome());
+            jCBAlunos.addItem(aluno.getNome());            
         });
 
         extrair.getTurmas().forEach((turma) -> {
@@ -331,6 +348,7 @@ public class CadastrarAlerta extends javax.swing.JFrame {
                 alerta.setConsecutivo(jCBConsecutivas.isSelected());
                 alerta.setDiaEspecifico(jCBDiaDaSemana.getSelectedItem().toString());
                 break;
+                
             case 1:
                 alerta = new Alerta();
                 alerta.setTurma(jCBTurma.getSelectedItem().toString());
@@ -338,19 +356,27 @@ public class CadastrarAlerta extends javax.swing.JFrame {
                 alerta.setConsecutivo(jCBConsecutivas.isSelected());
                 alerta.setDiaEspecifico(jCBDiaDaSemana.getSelectedItem().toString());
                 break;
+                
             case 2:
                 alerta = new Alerta();
-                alerta.setNomeAluno(jCBAlunos.getSelectedItem().toString());
+                alerta.setQuantidadeMinimaDeDiasDeAtraso(Integer.parseInt(jTFQuantidadeDeDiasAtraso.getText()));
                 alerta.setMinutosAtraso(Integer.parseInt(jTFMinutosAtraso.getText()));
                 break;
+                
             case 3:
                 alerta = new Alerta();
-                alerta.setNomeAluno(jCBAlunos.getSelectedItem().toString());
+                alerta.setQuantidadeMinimaDeDiasDeAdianto(Integer.parseInt(jTFQuantidadeDeDiasAdianto.getText()));
                 alerta.setMinutosAdianto(Integer.parseInt(jTFMinutosAdianto.getText()));
                 break;
+                
         }
-
+dispose();
     }//GEN-LAST:event_jBOKActionPerformed
+
+    private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jBCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -392,29 +418,29 @@ public class CadastrarAlerta extends javax.swing.JFrame {
     private javax.swing.JButton jBCancelar;
     private javax.swing.JButton jBOK;
     private javax.swing.JComboBox<String> jCBAlunos;
-    private javax.swing.JComboBox<String> jCBAlunosAdianto;
-    private javax.swing.JComboBox<String> jCBAlunosAtraso;
     private javax.swing.JCheckBox jCBConsecutivas;
     private javax.swing.JCheckBox jCBConsecutivasTurma;
     private javax.swing.JComboBox<String> jCBDiaDaSemana;
     private javax.swing.JComboBox<String> jCBDiaDaSemanaTurma;
     private javax.swing.JComboBox<String> jCBTurma;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField jTFMinutosAdianto;
     private javax.swing.JTextField jTFMinutosAtraso;
+    private javax.swing.JTextField jTFQuantidadeDeDiasAdianto;
+    private javax.swing.JTextField jTFQuantidadeDeDiasAtraso;
     private javax.swing.JTextField jTFQuantidadeDeFaltas;
     private javax.swing.JTextField jTFQuantidadeDeFaltasTurma;
     private javax.swing.JTabbedPane jTabbedPane1;

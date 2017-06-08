@@ -17,6 +17,24 @@ public class Alerta {
     private String turma;
     private int minutosAtraso;
     private int minutosAdianto;
+    private int quantidadeMinimaDeDiasDeAtraso;
+    private int quantidadeMinimaDeDiasDeAdianto;
+
+    public int getQuantidadeMinimaDeDiasDeAtraso() {
+        return quantidadeMinimaDeDiasDeAtraso;
+    }
+
+    public void setQuantidadeMinimaDeDiasDeAtraso(int quantidadeMinimaDeDiasDeAtraso) {
+        this.quantidadeMinimaDeDiasDeAtraso = quantidadeMinimaDeDiasDeAtraso;
+    }
+
+    public int getQuantidadeMinimaDeDiasDeAdianto() {
+        return quantidadeMinimaDeDiasDeAdianto;
+    }
+
+    public void setQuantidadeMinimaDeDiasDeAdianto(int quantidadeMinimaDeDiasDeAdianto) {
+        this.quantidadeMinimaDeDiasDeAdianto = quantidadeMinimaDeDiasDeAdianto;
+    }
 
     public String getNomeAluno() {
         return nomeAluno;

@@ -177,9 +177,22 @@ public class ExtraiDados {
         return eventos;
     }
 
+    public Aluno consultaAlunoPorNome(String nome) {
+        
+        for (int contador=0; contador< getAlunos().size(); contador++)
+        {
+            Aluno aluno = getAlunos().get(contador);
+            if (aluno.getNome().equals(nome)) {
+                return aluno;                
+            }
+        
+        }
+        
+        return null;
+    }
+
     public void criaArrays() {
 
-        
         ArrayList<String> diasDaSemana = new ArrayList<String>();
         diasDaSemana.add("Segunda-Feira");
         diasDaSemana.add("Terça-Feira");
@@ -187,7 +200,7 @@ public class ExtraiDados {
         diasDaSemana.add("Quinta-Feira");
         diasDaSemana.add("Sexta-Feira");
         setDiasDaSemana(diasDaSemana);
-        
+
         ArrayList<Aluno> alunos = new ArrayList<Aluno>();
         ArrayList<String> CatracaAluno = new ArrayList<String>();
         ArrayList<String> Academico = new ArrayList<String>();

@@ -5,6 +5,10 @@
  */
 package telas;
 
+import arquivos.Alerta;
+import arquivos.Aluno;
+import arquivos.ExtraiDados;
+import java.util.ArrayList;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -12,15 +16,16 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author aluno
  */
-
-
 public class Principal extends javax.swing.JFrame {
 
     /**
      * Creates new form Principal
      */
     private String usuarioLogado;
-    
+
+    private ArrayList<Alerta> Alertas = new ArrayList<Alerta>();
+    private ExtraiDados extrair = new ExtraiDados(null, null, null);
+
     public Principal() {
         initComponents();
     }
@@ -62,6 +67,11 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jBCriarFiltros.setText("Criar Alertas");
+        jBCriarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCriarFiltrosActionPerformed(evt);
+            }
+        });
 
         jBGerarRelatorios.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jBGerarRelatorios.setText("Gerar Relatórios");
@@ -111,33 +121,50 @@ public class Principal extends javax.swing.JFrame {
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
         this.setSize(1280, 720);
-        formataTabela();
-  
+
     }//GEN-LAST:event_formWindowActivated
 
-    private void  formataTabela(){
-        
+    private void jBCriarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCriarFiltrosActionPerformed
+        // TODO add your handling code here:
+        CadastrarAlerta cadastrarAlerta = new CadastrarAlerta(this, "Criar Alerta", rootPaneCheckingEnabled);
+        //this.setEnabled(false);
+        cadastrarAlerta.setVisible(true);
+
+        if (cadastrarAlerta.getAlerta() != null) {
+            Alertas.add(cadastrarAlerta.getAlerta());
+        }
+        processaAlertas();
+    }//GEN-LAST:event_jBCriarFiltrosActionPerformed
+    
+    
+    private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
-                new String[]{"Nome","Matrícula", "Turma", "Turno", "Informação"}        
+                new String[]{"Nome", "Matrícula", "Turma", "Turno", "Informação"}
         ));
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        String linha[] = new String[5];
-        
-        linha[0] = "Fabiano";
-        linha[1] = "1231231";
-        linha[2] = "12345";
-        linha[3] = "M";
-        linha[4] = "Ta complicado";
-        
-        modelo.addRow(linha);
-        //jScrollPane1.setViewportView(jTable1);
+        for(int contador = 0; contador<Alertas.size(); contador++)
+        {
+            Alerta alerta = Alertas.get(contador);
+            String linha[] = new String[5];
+
+            Aluno aluno = extrair.consultaAlunoPorNome(alerta.getNomeAluno());            
+            
+            linha[0] = alerta.getNomeAluno();
+            linha[1] = aluno.getMatricula();
+            linha[2] = aluno.getTurma();
+            linha[3] = aluno.getTurno();
+            linha[4] = "Ta complicado";
+            modelo.addRow(linha);
+        }
     }
+
     
-    public void usuario(String usuario){
+    public void usuario(String usuario) {
         this.usuarioLogado = usuario;
         jLUsuario.setText(this.usuarioLogado);
     }
+
     /**
      * @param args the command line arguments
      */
