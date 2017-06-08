@@ -104,11 +104,12 @@ public class Evento {
 
     public Evento(String sequencia, String dataHoraString, String nomeAreaOrigem, String nomeAreaDestino, String usuario, String matricula, String nome) {
         this.sequencia = sequencia;
-        this.dataHora = Calendar.getInstance();
+        this.dataHora = new GregorianCalendar();
+        //this.dataHora = Calendar.getInstance();
 
         try {
             //2017-04-03 12:09:02.0000000
-            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSSS");
             this.dataHora.setTime(f.parse(dataHoraString));
 
         } catch (ParseException ex) {
