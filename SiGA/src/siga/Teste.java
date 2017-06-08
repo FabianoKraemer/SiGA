@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author aluno
  */
-public class Principal {
+public class Teste {
 
     /**
      * @param args the command line arguments
