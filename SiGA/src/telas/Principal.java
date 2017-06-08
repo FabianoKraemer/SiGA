@@ -7,8 +7,13 @@ package telas;
 
 import arquivos.Alerta;
 import arquivos.Aluno;
+import arquivos.Consultas;
+import arquivos.Evento;
 import arquivos.ExtraiDados;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,6 +30,7 @@ public class Principal extends javax.swing.JFrame {
 
     private ArrayList<Alerta> Alertas = new ArrayList<Alerta>();
     private ExtraiDados extrair = new ExtraiDados(null, null, null);
+    private Consultas consultas = new Consultas(extrair.getEventos(), extrair.getAlunos());
 
     public Principal() {
         initComponents();
@@ -135,21 +141,42 @@ public class Principal extends javax.swing.JFrame {
         }
         processaAlertas();
     }//GEN-LAST:event_jBCriarFiltrosActionPerformed
-    
-    
+
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
                 new String[]{"Nome", "Matrícula", "Turma", "Turno", "Informação"}
         ));
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        for(int contador = 0; contador<Alertas.size(); contador++)
-        {
+        
+        
+        
+        
+        for (int contador = 0; contador < Alertas.size(); contador++) {
             Alerta alerta = Alertas.get(contador);
+            
+            Map<Aluno, List<Evento>> respostaConsulta;
+            
+            switch (alerta.getTipoAlerta()){
+                case 0: //consulta Faltas por aluno                    
+                    break;
+                case 1: // consulta Faltas por turma
+                    break;
+                case 2: // consulta Atrasos
+                       respostaConsulta = consultas.consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(null, null, alerta.getMinutosAtraso(), alerta.getQuantidadeMinimaDeDiasDeAtraso());
+                    break;
+                case 3: // consulta Adiantos
+                    respostaConsulta = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(null, null, alerta.getMinutosAdianto(), alerta.getQuantidadeMinimaDeDiasDeAdianto());
+                     break;
+            }
+            
+            
+            
+            
             String linha[] = new String[5];
 
-            Aluno aluno = extrair.consultaAlunoPorNome(alerta.getNomeAluno());            
-            
+            Aluno aluno = extrair.consultaAlunoPorNome(alerta.getNomeAluno());
+
             linha[0] = alerta.getNomeAluno();
             linha[1] = aluno.getMatricula();
             linha[2] = aluno.getTurma();
@@ -159,7 +186,6 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
-    
     public void usuario(String usuario) {
         this.usuarioLogado = usuario;
         jLUsuario.setText(this.usuarioLogado);

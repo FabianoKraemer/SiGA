@@ -10,6 +10,9 @@ package arquivos;
  * @author aluno
  */
 public class Alerta {
+
+    private int tipoAlerta;
+    private String descricaoAlerta;
     private String nomeAluno;
     private int quantidadeMinimaDeDiasDeFalta;
     private boolean consecutivo;
@@ -19,6 +22,22 @@ public class Alerta {
     private int minutosAdianto;
     private int quantidadeMinimaDeDiasDeAtraso;
     private int quantidadeMinimaDeDiasDeAdianto;
+
+    public String getDescricaoAlerta() {
+        return descricaoAlerta;
+    }
+
+    public void setDescricaoAlerta(String descricaoAlerta) {
+        this.descricaoAlerta = descricaoAlerta;
+    }
+
+    public int getTipoAlerta() {
+        return tipoAlerta;
+    }
+
+    public void setTipoAlerta(int tipoAlerta) {
+        this.tipoAlerta = tipoAlerta;
+    }
 
     public int getQuantidadeMinimaDeDiasDeAtraso() {
         return quantidadeMinimaDeDiasDeAtraso;
@@ -91,6 +110,5 @@ public class Alerta {
     public void setMinutosAdianto(int minutosAdianto) {
         this.minutosAdianto = minutosAdianto;
     }
-    
-    
+
 }
