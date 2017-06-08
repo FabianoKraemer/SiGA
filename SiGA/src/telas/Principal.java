@@ -6,16 +6,21 @@
 package telas;
 
 import javax.swing.JTabbedPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author aluno
  */
+
+
 public class Principal extends javax.swing.JFrame {
 
     /**
      * Creates new form Principal
      */
+    private String usuarioLogado;
+    
     public Principal() {
         initComponents();
     }
@@ -29,6 +34,13 @@ public class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLUsuario = new javax.swing.JLabel();
+        jLUsuarioLogado = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jBCriarFiltros = new javax.swing.JButton();
+        jBGerarRelatorios = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowActivated(java.awt.event.WindowEvent evt) {
@@ -36,15 +48,61 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        jBCriarFiltros.setText("Criar Alertas");
+
+        jBGerarRelatorios.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
+        jBGerarRelatorios.setText("Gerar Relatórios");
+        jBGerarRelatorios.setMaximumSize(new java.awt.Dimension(125, 25));
+        jBGerarRelatorios.setMinimumSize(new java.awt.Dimension(125, 25));
+        jBGerarRelatorios.setPreferredSize(new java.awt.Dimension(125, 25));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 876, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 864, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLUsuario)
+                                .addGap(63, 63, 63)
+                                .addComponent(jLUsuarioLogado))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jBCriarFiltros)
+                                .addGap(18, 18, 18)
+                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 468, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLUsuario)
+                    .addComponent(jLUsuarioLogado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBCriarFiltros)
+                    .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -52,13 +110,34 @@ public class Principal extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
-        
-        
-        
-        
-        
+        this.setSize(1280, 720);
+        formataTabela();
+  
     }//GEN-LAST:event_formWindowActivated
 
+    private void  formataTabela(){
+        
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                null,
+                new String[]{"Nome","Matrícula", "Turma", "Turno", "Informação"}        
+        ));
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        String linha[] = new String[5];
+        
+        linha[0] = "Fabiano";
+        linha[1] = "1231231";
+        linha[2] = "12345";
+        linha[3] = "M";
+        linha[4] = "Ta complicado";
+        
+        modelo.addRow(linha);
+        //jScrollPane1.setViewportView(jTable1);
+    }
+    
+    public void usuario(String usuario){
+        this.usuarioLogado = usuario;
+        jLUsuario.setText(this.usuarioLogado);
+    }
     /**
      * @param args the command line arguments
      */
@@ -95,5 +174,11 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCriarFiltros;
+    private javax.swing.JButton jBGerarRelatorios;
+    private javax.swing.JLabel jLUsuario;
+    private javax.swing.JLabel jLUsuarioLogado;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

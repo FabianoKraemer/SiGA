@@ -33,14 +33,22 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPasswordField1 = new javax.swing.JPasswordField();
         jLUsuario = new javax.swing.JLabel();
         jLSenha = new javax.swing.JLabel();
         jTUsuario = new javax.swing.JTextField();
-        jTSenha = new javax.swing.JTextField();
         jBConfirmar = new javax.swing.JButton();
         jBCriarUsuario = new javax.swing.JButton();
+        jPassword = new javax.swing.JPasswordField();
+
+        jPasswordField1.setText("jPasswordField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jLUsuario.setText("Usuario:");
 
@@ -75,8 +83,8 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(jLUsuario))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTUsuario)
-                            .addComponent(jTSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jTUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                            .addComponent(jPassword))))
                 .addContainerGap(82, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -89,7 +97,7 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLSenha)
-                    .addComponent(jTSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jBConfirmar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -103,15 +111,19 @@ public class Login extends javax.swing.JFrame {
     private void jBConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfirmarActionPerformed
         // TODO add your handling code here:
         this.login = jTUsuario.getText();
-        this.senha = jTSenha.getText();
+        this.senha = jPassword.getText();
         
         Senhas senhas = new Senhas(this.login, this.senha);
         if(senhas.VerificaSenha()){
+            Principal prin = new Principal();
+            prin.usuario(this.login);
+            prin.setVisible(true);
+            this.setVisible(false);
             
         } else {
             JOptionPane.showMessageDialog(this, "Login ou Senha incorretos, digite novamente");           
             jTUsuario.setText("");
-            jTSenha.setText("");
+            jPassword.setText("");
             }
     }//GEN-LAST:event_jBConfirmarActionPerformed
 
@@ -120,6 +132,10 @@ public class Login extends javax.swing.JFrame {
         CadastrarUsuario cadastro = new CadastrarUsuario();
         cadastro.setVisible(true);
     }//GEN-LAST:event_jBCriarUsuarioActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -147,7 +163,7 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -161,7 +177,8 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton jBCriarUsuario;
     private javax.swing.JLabel jLSenha;
     private javax.swing.JLabel jLUsuario;
-    private javax.swing.JTextField jTSenha;
+    private javax.swing.JPasswordField jPassword;
+    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JTextField jTUsuario;
     // End of variables declaration//GEN-END:variables
 }
