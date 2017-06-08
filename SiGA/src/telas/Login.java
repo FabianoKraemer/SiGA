@@ -130,6 +130,7 @@ public class Login extends javax.swing.JFrame {
     private void jBCriarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCriarUsuarioActionPerformed
         // TODO add your handling code here:
         CadastrarUsuario cadastro = new CadastrarUsuario();
+        
         cadastro.setVisible(true);
     }//GEN-LAST:event_jBCriarUsuarioActionPerformed
 

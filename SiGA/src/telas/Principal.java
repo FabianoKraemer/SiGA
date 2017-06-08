@@ -12,8 +12,10 @@ import arquivos.Evento;
 import arquivos.ExtraiDados;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -79,11 +81,15 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        jBGerarRelatorios.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jBGerarRelatorios.setText("Gerar Relatórios");
         jBGerarRelatorios.setMaximumSize(new java.awt.Dimension(125, 25));
         jBGerarRelatorios.setMinimumSize(new java.awt.Dimension(125, 25));
-        jBGerarRelatorios.setPreferredSize(new java.awt.Dimension(125, 25));
+        jBGerarRelatorios.setPreferredSize(new java.awt.Dimension(130, 27));
+        jBGerarRelatorios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBGerarRelatoriosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,8 +108,8 @@ public class Principal extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jBCriarFiltros)
                                 .addGap(18, 18, 18)
-                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(585, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,7 +123,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jBCriarFiltros)
                     .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
         );
 
@@ -142,20 +148,24 @@ public class Principal extends javax.swing.JFrame {
         processaAlertas();
     }//GEN-LAST:event_jBCriarFiltrosActionPerformed
 
+    private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
+
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
-                new String[]{"Nome", "Matrícula", "Turma", "Turno", "Informação"}
+                new String[]{"Nome", "Matrícula", "Turma", "Turno", "Dia", "Informação"}
         ));
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        
-        
-        
+    
+        modelo.setRowCount(0);
         
         for (int contador = 0; contador < Alertas.size(); contador++) {
             Alerta alerta = Alertas.get(contador);
-            
-            Map<Aluno, List<Evento>> respostaConsulta;
+            Map<Aluno, List<Evento>> respostaConsulta = new HashMap<Aluno, List<Evento>>();
             
             switch (alerta.getTipoAlerta()){
                 case 0: //consulta Faltas por aluno                    
@@ -163,26 +173,35 @@ public class Principal extends javax.swing.JFrame {
                 case 1: // consulta Faltas por turma
                     break;
                 case 2: // consulta Atrasos
-                       respostaConsulta = consultas.consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(null, null, alerta.getMinutosAtraso(), alerta.getQuantidadeMinimaDeDiasDeAtraso());
+                    respostaConsulta = consultas.consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(null, null, alerta.getMinutosAtraso(), alerta.getQuantidadeMinimaDeDiasDeAtraso());
                     break;
                 case 3: // consulta Adiantos
                     respostaConsulta = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(null, null, alerta.getMinutosAdianto(), alerta.getQuantidadeMinimaDeDiasDeAdianto());
                      break;
             }
             
+            Set<Aluno> keys = respostaConsulta.keySet();
             
-            
-            
-            String linha[] = new String[5];
+            for (Aluno alunoMap : keys) {                
+                List<Evento> eventos = new ArrayList<Evento>();
+                
+                eventos = respostaConsulta.get(alunoMap);
+               
+                for (int i = 0; i < eventos.size(); i++){
+                    Evento evento = eventos.get(i);
+                    
+                    String linha[] = new String[6];
+                    linha[0] = evento.getNome();
+                    linha[1] = evento.getMatricula();
+                    linha[2] = alunoMap.getTurma();
+                    linha[3] = alunoMap.getTurma();
+                    linha[4] = evento.getDataHoraPorExtenso();
+                    linha[5] = "ta complicado";
+                    modelo.addRow(linha);
+            }
+                               
+            }
 
-            Aluno aluno = extrair.consultaAlunoPorNome(alerta.getNomeAluno());
-
-            linha[0] = alerta.getNomeAluno();
-            linha[1] = aluno.getMatricula();
-            linha[2] = aluno.getTurma();
-            linha[3] = aluno.getTurno();
-            linha[4] = "Ta complicado";
-            modelo.addRow(linha);
         }
     }
 

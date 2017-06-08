@@ -170,6 +170,8 @@ public class CadastrarUsuario extends javax.swing.JFrame {
             jBCadastrar.setEnabled(true);
             jTNovoUsuario.setEnabled(true);
             jTSenhaUsuario.setEnabled(true);
+            jTAdministrador.setEditable(false);
+            jTSenhaAdministrador.setEditable(false);
             
         } else {
             jTAdministrador.setText("");
@@ -181,10 +183,13 @@ public class CadastrarUsuario extends javax.swing.JFrame {
 
     private void jBCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCadastrarActionPerformed
         // TODO add your handling code here:
+        this.usuarioNovo = this.jTNovoUsuario.getText();
+        this.senhaNova = this.jTSenhaUsuario.getText();
         Senhas senha = new Senhas(this.usuarioNovo, this.senhaNova);
+        
         senha.CriarUsuario();
         JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso");
-    
+        dispose();
     }//GEN-LAST:event_jBCadastrarActionPerformed
 
     /**

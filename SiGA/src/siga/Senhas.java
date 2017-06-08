@@ -73,12 +73,12 @@ public void CriarUsuario(){
             return;
         }
 
-        String gravar = this.login + "," + this.senha;
+        String gravar = this.login + "," + this.senha + "\n";
         fwArquivo.write(gravar);
-        BufferedWriter bw = new BufferedWriter(fwArquivo);
-        bw.write("teste");
+        //BufferedWriter bw = new BufferedWriter(fwArquivo);
+        //bw.write("teste");
         // fechando arquivo
-        bw.close();
+        //bw.close();
         fwArquivo.close();
         }catch(Exception e){}
       
