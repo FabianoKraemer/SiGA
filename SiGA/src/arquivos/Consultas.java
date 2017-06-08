@@ -136,8 +136,8 @@ public class Consultas {
     //Consultas Baseadas em Eventos
     private List<Evento> consultaEventosComAtrasoDeEntrada(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
 
-        List<Evento> eventosResposta = getEventos().stream().filter(evento -> evento.getEntradaAtrasada()
-                && evento.getMinutosAtrasados() >= MinutosDeAtrasoDeEntrada
+        List<Evento> eventosResposta = getEventos().stream().filter(p -> p.getEntradaAtrasada()
+                && p.getMinutosAtrasados() >= MinutosDeAtrasoDeEntrada
         ).collect(Collectors.toList());
 
         return eventosResposta;
