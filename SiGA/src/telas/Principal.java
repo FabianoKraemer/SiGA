@@ -326,12 +326,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
-        // TODO add your handling code here:
-        remover = new int[jTable1.getSelectedRowCount()];
-        remover = jTable1.getSelectedRows();
 
-        // habilitando o botão que permitirá remover as linhas selecionadas
-        jBRemoverAlerta.setEnabled(true);
     }//GEN-LAST:event_jTable1MouseReleased
 
     private void jBGerirAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerirAlertasActionPerformed
@@ -434,33 +429,6 @@ public class Principal extends javax.swing.JFrame {
         jLUsuario.setText(this.usuarioLogado);
     }
 
-    private void salvarAlertas() {
-
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-
-        if (modelo.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Não há nenhum alerta criado");
-            return;
-        }
-
-        File arquivo = new File("alertas.dat");
-
-        try {
-            FileOutputStream fout = new FileOutputStream(arquivo);
-            ObjectOutputStream oos = new ObjectOutputStream(fout);
-
-            //gravando o alerta no arquivo chamado "alertas.dat"
-            oos.writeObject(this.Alertas);
-
-            oos.flush(); //limpando os dados em buffer
-            oos.close(); // fechando fluxo de saída
-            fout.close(); // fechando arquivo
-            JOptionPane.showMessageDialog(this, "Arquivo salvo");
-        } catch (IOException ex) {
-            System.err.println("erro: " + ex.toString());
-        }
-
-    }
 
     private void lerAlertas() {
         File arquivo = new File("alertas.dat");
@@ -489,21 +457,6 @@ public class Principal extends javax.swing.JFrame {
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("erro: " + ex.toString());
         }
-
-    }
-
-    private void excluirAlerta() {
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-
-        rem = remover.length;
-
-        while (rem > 0) {
-            modelo.removeRow(remover[rem - 1]);
-            rem--;
-        }
-
-        //sempre desativa o botao de remover depois que ocorre uma remoção
-        jBRemoverAlerta.setEnabled(false);
 
     }
 
