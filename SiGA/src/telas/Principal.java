@@ -75,11 +75,7 @@ public class Principal extends javax.swing.JFrame {
         jLUsuarioLogado = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jBCriarFiltros = new javax.swing.JButton();
         jBGerarRelatorios = new javax.swing.JButton();
-        jBSalvarAlertas = new javax.swing.JButton();
-        jBCarregarAlertas = new javax.swing.JButton();
-        jBRemoverAlerta = new javax.swing.JButton();
         jBGerirAlertas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -101,43 +97,11 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jBCriarFiltros.setText("Criar Alertas");
-        jBCriarFiltros.setEnabled(false);
-        jBCriarFiltros.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBCriarFiltrosActionPerformed(evt);
-            }
-        });
-
         jBGerarRelatorios.setText("Gerar Relatórios");
         jBGerarRelatorios.setPreferredSize(new java.awt.Dimension(130, 27));
         jBGerarRelatorios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBGerarRelatoriosActionPerformed(evt);
-            }
-        });
-
-        jBSalvarAlertas.setText("Salvar Alertas");
-        jBSalvarAlertas.setEnabled(false);
-        jBSalvarAlertas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBSalvarAlertasActionPerformed(evt);
-            }
-        });
-
-        jBCarregarAlertas.setText("Carregar Alertas");
-        jBCarregarAlertas.setEnabled(false);
-        jBCarregarAlertas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBCarregarAlertasActionPerformed(evt);
-            }
-        });
-
-        jBRemoverAlerta.setText("Remover Alerta");
-        jBRemoverAlerta.setEnabled(false);
-        jBRemoverAlerta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBRemoverAlertaActionPerformed(evt);
             }
         });
 
@@ -163,18 +127,10 @@ public class Principal extends javax.swing.JFrame {
                                 .addGap(63, 63, 63)
                                 .addComponent(jLUsuarioLogado))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jBCriarFiltros)
+                                .addComponent(jBGerirAlertas)
                                 .addGap(18, 18, 18)
-                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBSalvarAlertas)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBCarregarAlertas)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBRemoverAlerta)
-                                .addGap(35, 35, 35)
-                                .addComponent(jBGerirAlertas)))
-                        .addContainerGap(92, Short.MAX_VALUE))))
+                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(731, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,11 +141,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLUsuarioLogado))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBCriarFiltros)
                     .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBSalvarAlertas)
-                    .addComponent(jBCarregarAlertas)
-                    .addComponent(jBRemoverAlerta)
                     .addComponent(jBGerirAlertas))
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
@@ -213,18 +165,6 @@ public class Principal extends javax.swing.JFrame {
 
         modelo.setRowCount(0);*/
     }//GEN-LAST:event_formWindowActivated
-
-    private void jBCriarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCriarFiltrosActionPerformed
-        // TODO add your handling code here:
-        CadastrarAlerta cadastrarAlerta = new CadastrarAlerta(this, "Criar Alerta", rootPaneCheckingEnabled);
-        //this.setEnabled(false);
-        cadastrarAlerta.setVisible(true);
-
-        if (cadastrarAlerta.getAlerta() != null) {
-            Alertas.add(cadastrarAlerta.getAlerta());
-        }
-        processaAlertas();
-    }//GEN-LAST:event_jBCriarFiltrosActionPerformed
 
     private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
         // TODO add your handling code here:
@@ -281,7 +221,6 @@ public class Principal extends javax.swing.JFrame {
                         linha[5] = alerta.getTipoAlertaDescricao();
                         insereLinhaDocumento(documento, linha);
                     }
-
                 }
                 finalizaDocumento(documento);
             } else if (respostaConsultaCalendar.size() > 0) {
@@ -301,9 +240,9 @@ public class Principal extends javax.swing.JFrame {
                         linha[4] = consultas.getDataHoraPorExtenso(dia);
                         linha[5] = alerta.getTipoAlertaDescricao();
                         insereLinhaDocumento(documento, linha);
-                    }
-                    finalizaDocumento(documento);
+                    }                    
                 }
+                finalizaDocumento(documento);
 
             }
 
@@ -337,7 +276,7 @@ public class Principal extends javax.swing.JFrame {
 
             Font font = new Font(bf, 8);
             //String Cabecalho = String.format("%-20s %s\n", "Nome", "Matricula", "Turma", "Turno", "Data", "Informação");
-            String Cabecalho = String.format("%-20s %-10s %-8s %-5s %-19s %-30s\n", "Nome", "Matricula", "Turma", "Turno", "Data", "Informação");
+            String Cabecalho = String.format("%-35s %-10s %-8s %-5s %-19s %-30s\n", "Nome", "Matricula", "Turma", "Turno", "Data", "Informação");
             documento.add(new Paragraph(Cabecalho, font));
 
         } catch (FileNotFoundException ex) {
@@ -351,7 +290,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     private void insereLinhaDocumento(Document documento, String[] linha) {
-        String row = String.format("%-20s %-10s %-8s %-5s %-19s %-30s\n", linha[0], linha[1], linha[2], linha[3], linha[4], linha[5]);
+        String row = String.format("%-35s %-10s %-8s %-5s %-19s %-30s\n", linha[0], linha[1], linha[2], linha[3], linha[4], linha[5]);
         /*for (int i = 0; i < linha.length; i++) {
             row = row + linha[i];
         }
@@ -386,16 +325,6 @@ public class Principal extends javax.swing.JFrame {
 
     }
 
-    private void jBSalvarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalvarAlertasActionPerformed
-        // TODO add your handling code here:
-        salvarAlertas();
-    }//GEN-LAST:event_jBSalvarAlertasActionPerformed
-
-    private void jBCarregarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCarregarAlertasActionPerformed
-        // TODO add your handling code here:
-        lerAlertas();
-    }//GEN-LAST:event_jBCarregarAlertasActionPerformed
-
     private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
         // TODO add your handling code here:
         remover = new int[jTable1.getSelectedRowCount()];
@@ -405,14 +334,9 @@ public class Principal extends javax.swing.JFrame {
         jBRemoverAlerta.setEnabled(true);
     }//GEN-LAST:event_jTable1MouseReleased
 
-    private void jBRemoverAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRemoverAlertaActionPerformed
-        // TODO add your handling code here:
-        excluirAlerta();
-    }//GEN-LAST:event_jBRemoverAlertaActionPerformed
-
     private void jBGerirAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerirAlertasActionPerformed
         // TODO add your handling code here:
-        GerirAlertas gerirAlertas = new GerirAlertas(this,"Gerenciar Alertas",rootPaneCheckingEnabled, this.usuario);
+        GerirAlertas gerirAlertas = new GerirAlertas(this, "Gerenciar Alertas", rootPaneCheckingEnabled, this.usuario);
 
         gerirAlertas.setVisible(true);
 
@@ -420,7 +344,7 @@ public class Principal extends javax.swing.JFrame {
             Alertas.clear();
             Alertas = gerirAlertas.getAlertas();
             processaAlertas();
-        }        
+        }
 
     }//GEN-LAST:event_jBGerirAlertasActionPerformed
 
@@ -432,6 +356,8 @@ public class Principal extends javax.swing.JFrame {
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
 
         modelo.setRowCount(0);
+        modelo.getDataVector().removeAllElements();
+        modelo.fireTableDataChanged(); // notifies the JTable that the model has changed
 
         for (int contador = 0; contador < Alertas.size(); contador++) {
             Alerta alerta = Alertas.get(contador);
@@ -490,7 +416,7 @@ public class Principal extends javax.swing.JFrame {
                         linha[0] = alunoMap.getNome();
                         linha[1] = alunoMap.getMatricula();
                         linha[2] = alunoMap.getTurma();
-                        linha[3] = alunoMap.getTurma();
+                        linha[3] = alunoMap.getTurno();
                         linha[4] = consultas.getDataHoraPorExtenso(dia);
                         linha[5] = alerta.getTipoAlertaDescricao();
                         modelo.addRow(linha);
@@ -550,12 +476,13 @@ public class Principal extends javax.swing.JFrame {
             oin.close(); //fechar o fluxo de entrada
             fin.close(); //fechar arquivo
 
+            this.Alertas.clear();
             for (Alerta alerta : alertasFile) {
                 if (alerta.getLoginUsuario().equals(usuario.getLogin())) {
                     this.Alertas.add(alerta);
                 }
             }
-            
+
             processaAlertas();
 
             System.out.println("tamanho array: " + alertasFile.size());
@@ -616,12 +543,8 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jBCarregarAlertas;
-    private javax.swing.JButton jBCriarFiltros;
     private javax.swing.JButton jBGerarRelatorios;
     private javax.swing.JButton jBGerirAlertas;
-    private javax.swing.JButton jBRemoverAlerta;
-    private javax.swing.JButton jBSalvarAlertas;
     private javax.swing.JLabel jLUsuario;
     private javax.swing.JLabel jLUsuarioLogado;
     private javax.swing.JScrollPane jScrollPane1;

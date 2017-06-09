@@ -99,7 +99,7 @@ public class Consultas {
     }
 
     public static String getDataHoraPorExtenso(Calendar calendario) {
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat f = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return f.format(calendario.getTime()).toString();
     }
 

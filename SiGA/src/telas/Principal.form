@@ -38,20 +38,12 @@
                               <Component id="jLUsuarioLogado" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jBCriarFiltros" min="-2" max="-2" attributes="0"/>
+                              <Component id="jBGerirAlertas" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jBGerarRelatorios" min="-2" pref="138" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jBSalvarAlertas" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jBCarregarAlertas" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jBRemoverAlerta" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                              <Component id="jBGerirAlertas" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="92" max="32767" attributes="0"/>
+                      <EmptySpace pref="731" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -67,11 +59,7 @@
               </Group>
               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jBCriarFiltros" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jBGerarRelatorios" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jBSalvarAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jBCarregarAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jBRemoverAlerta" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jBGerirAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -105,15 +93,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jBCriarFiltros">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Criar Alertas"/>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBCriarFiltrosActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JButton" name="jBGerarRelatorios">
       <Properties>
         <Property name="text" type="java.lang.String" value="Gerar Relat&#xf3;rios"/>
@@ -123,33 +102,6 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBGerarRelatoriosActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="jBSalvarAlertas">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Salvar Alertas"/>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBSalvarAlertasActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="jBCarregarAlertas">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Carregar Alertas"/>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBCarregarAlertasActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="jBRemoverAlerta">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Remover Alerta"/>
-        <Property name="enabled" type="boolean" value="false"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBRemoverAlertaActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jBGerirAlertas">

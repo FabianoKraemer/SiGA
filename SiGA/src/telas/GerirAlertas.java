@@ -125,6 +125,7 @@ public class GerirAlertas extends JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private ArrayList<Alerta> carregarAlertas(Usuario usuario) {
@@ -264,7 +265,6 @@ public class GerirAlertas extends JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBApagar;
-    private javax.swing.JButton jBCriarFiltros;
     private javax.swing.JButton jBCriarNovo;
     private javax.swing.JButton jBOK;
     private javax.swing.JComboBox<String> jCBAlertas;
