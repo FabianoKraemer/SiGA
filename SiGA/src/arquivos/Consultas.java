@@ -68,13 +68,13 @@ public class Consultas {
         Calendar calendar = new GregorianCalendar();
         calendar = startDate;
 
-        if (calendar.get(Calendar.DAY_OF_WEEK) == (DiaDaSemana.getValue()+1)) {
+        if (calendar.get(Calendar.DAY_OF_WEEK) == (DiaDaSemana.getValue() + 1)) {
             return calendar;
         } else {
-            while (calendar.get(Calendar.DAY_OF_WEEK) != (DiaDaSemana.getValue()+1)) {
+            while (calendar.get(Calendar.DAY_OF_WEEK) != (DiaDaSemana.getValue() + 1)) {
                 calendar.add(Calendar.DATE, 1);
             }
-            if (calendar.get(Calendar.DAY_OF_WEEK) == (DiaDaSemana.getValue()+1) && calendar.before(endDate)) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == (DiaDaSemana.getValue() + 1) && calendar.before(endDate)) {
                 return calendar;
             }
         }
@@ -98,12 +98,12 @@ public class Consultas {
         return null;
     }
 
-    private static String getDataHoraPorExtenso(Calendar calendario) {
+    public static String getDataHoraPorExtenso(Calendar calendario) {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return f.format(calendario.getTime()).toString();
     }
 
-    public Map<Aluno, List<Calendar>> listaDiasComFaltas(Calendar DataInicial, Calendar DataFinal, DayOfWeek DiaDaSemana) {
+    private Map<Aluno, List<Calendar>> listaDiasComFaltas(Calendar DataInicial, Calendar DataFinal, DayOfWeek DiaDaSemana) {
 
         Map<Aluno, List<Calendar>> mapaResposta = new HashMap<Aluno, List<Calendar>>();
         List<Calendar> diasSelecionados;
@@ -113,7 +113,7 @@ public class Consultas {
         } else {
             diasSelecionados = getDiasAlternadosEntreDuasDatas(DataInicial, DataFinal, DiaDaSemana);
         }
-               
+
         getAlunos().forEach((aluno) -> {
             for (int contador = 0; contador < diasSelecionados.size(); contador++) {
                 Calendar dia = diasSelecionados.get(contador);
@@ -154,52 +154,65 @@ public class Consultas {
 		Lista de datas com dias consecutivos em que o Aluno não teve registros de Entrada ou Saída em Datas Consecutivas e que não seja Sábado ou Domingo;0,
 	
      */
-    public Map<Aluno, List<Calendar>> faltasConsecutivas(String Turma, String Aluno, Calendar DataInicial, Calendar DataFinal, int QuantidadeConsecutivaFaltas) {
-        Map<Aluno, List<Calendar>> resposta = listaDiasComFaltas(DataInicial, DataFinal, null);
+    public Map<Aluno, List<Calendar>> listaFaltas(String Turma, String Aluno, Calendar DataInicial, Calendar DataFinal, int QuantidadeFaltas, DayOfWeek DiaDaSemana, Boolean Consecutiva) {
+        Map<Aluno, List<Calendar>> resposta = listaDiasComFaltas((Calendar)DataInicial.clone(), (Calendar)DataFinal.clone(), DiaDaSemana);
 
-        //Remove Alunos que ainda não tem a quantidade de dias especificado
-        for (Iterator<Map.Entry<Aluno, List<Calendar>>> it = resposta.entrySet().iterator(); it.hasNext();) {
-            Map.Entry<Aluno, List<Calendar>> entry = it.next();
-            List<Calendar> listaDiasConsecutivosResposta = new ArrayList<Calendar>();
-            List<Calendar> listaDiasConsecutivos = new ArrayList<Calendar>();
-            List<Calendar> listaDias = entry.getValue();
+        if (Consecutiva) {
+            //Remove Alunos que ainda não tem a quantidade de dias especificado
+            for (Iterator<Map.Entry<Aluno, List<Calendar>>> it = resposta.entrySet().iterator(); it.hasNext();) {
+                Map.Entry<Aluno, List<Calendar>> entry = it.next();
+                List<Calendar> listaDiasConsecutivosResposta = new ArrayList<Calendar>();
+                List<Calendar> listaDiasConsecutivos = new ArrayList<Calendar>();
+                List<Calendar> listaDias = entry.getValue();
 
-            for (Calendar calendario : listaDias) {
-                if (listaDiasConsecutivos.size() == 0) {
-                    listaDiasConsecutivos.add((Calendar) calendario.clone());
-                } else {
-                    Calendar ultimoDia = listaDiasConsecutivos.get(listaDiasConsecutivos.size() - 1);
-                    ultimoDia.add(Calendar.DAY_OF_MONTH, 1);
-                    if (calendario.equals(ultimoDia)) {
+                for (Calendar calendario : listaDias) {
+                    if (listaDiasConsecutivos.size() == 0) {
                         listaDiasConsecutivos.add((Calendar) calendario.clone());
                     } else {
+                        Calendar ultimoDia = listaDiasConsecutivos.get(listaDiasConsecutivos.size() - 1);
+                        ultimoDia.add(Calendar.DAY_OF_MONTH, 1);
+                        if (calendario.equals(ultimoDia)) {
+                            listaDiasConsecutivos.add((Calendar) calendario.clone());
+                        } else {
 
+                            if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
+                                listaDiasConsecutivosResposta = listaDiasConsecutivos;
+                            }
+                            listaDiasConsecutivos.clear();
+                        }
                         if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
-                            listaDiasConsecutivosResposta = listaDiasConsecutivos;
-                        }
-                        listaDiasConsecutivos.clear();
+                            listaDiasConsecutivosResposta.clear();
+                            for (Calendar calendarioCons : listaDiasConsecutivos) {
+                                listaDiasConsecutivosResposta.add((Calendar) calendarioCons.clone());
+                            }
+                        };
                     }
-                    if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
-                        listaDiasConsecutivosResposta.clear();
-                        for (Calendar calendarioCons : listaDiasConsecutivos) {
-                            listaDiasConsecutivosResposta.add((Calendar) calendarioCons.clone());
-                        }
-                    };
                 }
-            }
-            if (listaDiasConsecutivosResposta.size() < QuantidadeConsecutivaFaltas) {
-                it.remove();
-            } else if (Aluno != null && !entry.getKey().getNome().equals(Aluno)) {
-                it.remove();
-            } else if (Turma != null && !entry.getKey().getTurma().equals(Turma)) {
-                it.remove();
-            }
+                if (listaDiasConsecutivosResposta.size() < QuantidadeFaltas) {
+                    it.remove();
+                } else if (Aluno != null && !entry.getKey().getNome().equals(Aluno)) {
+                    it.remove();
+                } else if (Turma != null && !entry.getKey().getTurma().equals(Turma)) {
+                    it.remove();
+                }
 
-            /* for (Calendar evento : entry.getValue()) {
+                /* for (Calendar evento : entry.getValue()) {
                 System.out.println( entry.getKey().getNome() + "    Evento: " + getDataHoraPorExtenso(evento));
             }*/
+            }
+        }else
+        {
+         for (Iterator<Map.Entry<Aluno, List<Calendar>>> it = resposta.entrySet().iterator(); it.hasNext();) {
+                Map.Entry<Aluno, List<Calendar>> entry = it.next();
+                if (Aluno != null && !entry.getKey().getNome().equals(Aluno)) {
+                    it.remove();
+                } else if (Turma != null && !entry.getKey().getTurma().equals(Turma)) {
+                    it.remove();
+                }
+         }
+        
         }
-
+        
         Set<Aluno> keys = resposta.keySet();
         for (Aluno alunoMap : keys) {
             System.out.println("Aluno : " + alunoMap.getNome());
@@ -219,10 +232,6 @@ public class Consultas {
 	Saída:
 		Lista de datas que houveram faltas consecutivas em Disciplinas que possuem horário no dia da semana informado;
      */
-    public Map<Aluno, List<Calendar>> faltasConsecutivasEmDeterminadoDia(String Turma, Calendar DataInicial, Calendar DataFinal, int QuantidadeConsecutivaFaltas, DayOfWeek DiaDaSemana) {
-
-        return listaDiasComFaltas(DataInicial, DataFinal, DiaDaSemana);
-    }
 
     /*
  

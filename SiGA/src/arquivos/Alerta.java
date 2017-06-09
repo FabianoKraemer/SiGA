@@ -14,18 +14,38 @@ import java.util.Calendar;
 public class Alerta {
 
     private int tipoAlerta;
+    private String tipoAlertaDescricao;
     private String descricaoAlerta;
     private String nomeAluno;
     private int quantidadeMinimaDeDiasDeFalta;
     private Calendar DataInicial;
     private Calendar DataFinal;    
     private boolean consecutivo;
-    private String diaEspecifico;
+    private boolean diaEspecificoEscolhido;
+    private int diaEspecifico;
     private String turma;
     private int minutosAtraso;
     private int minutosAdianto;
     private int quantidadeMinimaDeDiasDeAtraso;
     private int quantidadeMinimaDeDiasDeAdianto;
+
+    public String getTipoAlertaDescricao() {
+        return tipoAlertaDescricao;
+    }
+
+    public void setTipoAlertaDescricao(String tipoAlertaDescricao) {
+        this.tipoAlertaDescricao = tipoAlertaDescricao;
+    }
+
+    
+    
+    public boolean isDiaEspecificoEscolhido() {
+        return diaEspecificoEscolhido;
+    }
+
+    public void setDiaEspecificoEscolhido(boolean diaEspecificoEscolhido) {
+        this.diaEspecificoEscolhido = diaEspecificoEscolhido;
+    }
 
     public Calendar getDataInicial() {
         return DataInicial;
@@ -99,11 +119,11 @@ public class Alerta {
         this.consecutivo = consecutivo;
     }
 
-    public String getDiaEspecifico() {
+    public int getDiaEspecifico() {
         return diaEspecifico;
     }
 
-    public void setDiaEspecifico(String diaEspecifico) {
+    public void setDiaEspecifico(int diaEspecifico) {
         this.diaEspecifico = diaEspecifico;
     }
 

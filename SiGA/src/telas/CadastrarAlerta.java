@@ -182,12 +182,13 @@ public class CadastrarAlerta extends JDialog {
                     .addComponent(jCBDiaDaSemana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTFDataInicialAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
-                        .addComponent(jTFDataFinalAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTFDataFinalAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jTFDataInicialAluno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -261,7 +262,7 @@ public class CadastrarAlerta extends JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCBDiaDaSemanaTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jTFDataInicialTurma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -404,6 +405,9 @@ public class CadastrarAlerta extends JDialog {
             jCBTurma.addItem(turma);
         });
 
+        jCBDiaDaSemana.addItem("");
+        jCBDiaDaSemanaTurma.addItem("");
+
         extrair.getDiasDaSemana().forEach((dia) -> {
             jCBDiaDaSemana.addItem(dia);
             jCBDiaDaSemanaTurma.addItem(dia);
@@ -430,30 +434,43 @@ public class CadastrarAlerta extends JDialog {
         switch (jTabbedPane1.getSelectedIndex()) {
             case 0:
                 alerta = new Alerta();
+                alerta.setTipoAlertaDescricao("Falta por Aluno");
                 alerta.setTipoAlerta(0);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
                 alerta.setNomeAluno(jCBAlunos.getSelectedItem().toString());
                 alerta.setQuantidadeMinimaDeDiasDeFalta(Integer.parseInt(jTFQuantidadeDeFaltas.getText()));
                 alerta.setConsecutivo(jCBConsecutivas.isSelected());
-                alerta.setDiaEspecifico(jCBDiaDaSemana.getSelectedItem().toString());
+                if (jCBDiaDaSemana.getSelectedItem() != "") {
+                    alerta.setDiaEspecificoEscolhido(true);
+                    alerta.setDiaEspecifico(jCBDiaDaSemana.getSelectedIndex() + 2);
+                } else {
+                    alerta.setDiaEspecificoEscolhido(false);
+                }
                 alerta.setDataInicial(getData(jTFDataInicialAluno.getText()));
-                alerta.setDataFinal(getData(jTFDataFinalAluno.getText()));                
+                alerta.setDataFinal(getData(jTFDataFinalAluno.getText()));
                 break;
 
             case 1:
                 alerta = new Alerta();
+                alerta.setTipoAlertaDescricao("Falta por Turma " + jCBTurma.getSelectedItem().toString());
                 alerta.setTipoAlerta(1);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
                 alerta.setTurma(jCBTurma.getSelectedItem().toString());
                 alerta.setQuantidadeMinimaDeDiasDeFalta(Integer.parseInt(jTFQuantidadeDeFaltas.getText()));
                 alerta.setConsecutivo(jCBConsecutivas.isSelected());
-                alerta.setDiaEspecifico(jCBDiaDaSemana.getSelectedItem().toString());
+                if (jCBDiaDaSemana.getSelectedItem() != "") {
+                    alerta.setDiaEspecificoEscolhido(true);
+                    alerta.setDiaEspecifico(jCBDiaDaSemana.getSelectedIndex() + 2);
+                } else {
+                    alerta.setDiaEspecificoEscolhido(false);
+                }
                 alerta.setDataInicial(getData(jTFDataInicialTurma.getText()));
                 alerta.setDataFinal(getData(jTFDataFinalTurma.getText()));
                 break;
 
             case 2:
                 alerta = new Alerta();
+                alerta.setTipoAlertaDescricao("Entrada Atrasada de " + Integer.parseInt(jTFMinutosAtraso.getText())+ " minutos por "+ Integer.parseInt(jTFQuantidadeDeDiasAtraso.getText()) + " dias");
                 alerta.setTipoAlerta(2);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
                 alerta.setQuantidadeMinimaDeDiasDeAtraso(Integer.parseInt(jTFQuantidadeDeDiasAtraso.getText()));
@@ -462,6 +479,7 @@ public class CadastrarAlerta extends JDialog {
 
             case 3:
                 alerta = new Alerta();
+                alerta.setTipoAlertaDescricao("Saida Adiantada de " + Integer.parseInt(jTFMinutosAdianto.getText())+ " minutos por "+ Integer.parseInt(jTFQuantidadeDeDiasAdianto.getText()) + " dias");
                 alerta.setTipoAlerta(3);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
                 alerta.setQuantidadeMinimaDeDiasDeAdianto(Integer.parseInt(jTFQuantidadeDeDiasAdianto.getText()));

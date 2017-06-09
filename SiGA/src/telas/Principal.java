@@ -10,6 +10,7 @@ import arquivos.Aluno;
 import arquivos.Consultas;
 import arquivos.Evento;
 import arquivos.ExtraiDados;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -150,58 +151,86 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
         // TODO add your handling code here:
-        
-        
+
+
     }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
 
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
-                new String[]{"Nome", "Matrícula", "Turma", "Turno", "Dia", "Informação"}
+                new String[]{"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
         ));
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-    
+
         modelo.setRowCount(0);
-        
+
         for (int contador = 0; contador < Alertas.size(); contador++) {
             Alerta alerta = Alertas.get(contador);
-            Map<Aluno, List<Evento>> respostaConsulta = new HashMap<Aluno, List<Evento>>();
-            
-            switch (alerta.getTipoAlerta()){
-                case 0: //consulta Faltas por aluno                    
+            Map<Aluno, List<Evento>> respostaConsultaEvento = new HashMap<Aluno, List<Evento>>();
+            Map<Aluno, List<Calendar>> respostaConsultaCalendar = new HashMap<Aluno, List<Calendar>>();
+
+            switch (alerta.getTipoAlerta()) {
+                case 0: //consulta Faltas por aluno
+                    if (alerta.isDiaEspecificoEscolhido()) {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), DayOfWeek.of(alerta.getDiaEspecifico()), alerta.isConsecutivo());
+                    } else {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), null, alerta.isConsecutivo());
+                    }
+
                     break;
                 case 1: // consulta Faltas por turma
+                    if (alerta.isDiaEspecificoEscolhido()) {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), DayOfWeek.of(alerta.getDiaEspecifico()), alerta.isConsecutivo());
+                    } else {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), null, alerta.isConsecutivo());
+                    }
                     break;
                 case 2: // consulta Atrasos
-                    respostaConsulta = consultas.consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(null, null, alerta.getMinutosAtraso(), alerta.getQuantidadeMinimaDeDiasDeAtraso());
+                    respostaConsultaEvento = consultas.consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(null, alerta.getMinutosAtraso(), alerta.getQuantidadeMinimaDeDiasDeAtraso());
                     break;
                 case 3: // consulta Adiantos
-                    respostaConsulta = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(null, null, alerta.getMinutosAdianto(), alerta.getQuantidadeMinimaDeDiasDeAdianto());
-                     break;
-            }
-            
-            Set<Aluno> keys = respostaConsulta.keySet();
-            
-            for (Aluno alunoMap : keys) {                
-                List<Evento> eventos = new ArrayList<Evento>();
-                
-                eventos = respostaConsulta.get(alunoMap);
-               
-                for (int i = 0; i < eventos.size(); i++){
-                    Evento evento = eventos.get(i);
-                    
-                    String linha[] = new String[6];
-                    linha[0] = evento.getNome();
-                    linha[1] = evento.getMatricula();
-                    linha[2] = alunoMap.getTurma();
-                    linha[3] = alunoMap.getTurma();
-                    linha[4] = evento.getDataHoraPorExtenso();
-                    linha[5] = "ta complicado";
-                    modelo.addRow(linha);
-            }
-                               
+                    respostaConsultaEvento = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(null, alerta.getMinutosAdianto(), alerta.getQuantidadeMinimaDeDiasDeAdianto());
+                    break;
             }
 
+            if (respostaConsultaEvento.size() > 0) {
+                Set<Aluno> keys = respostaConsultaEvento.keySet();
+                for (Aluno alunoMap : keys) {
+                    List<Evento> eventos = new ArrayList<Evento>();
+                    eventos = respostaConsultaEvento.get(alunoMap);
+                    for (int i = 0; i < eventos.size(); i++) {
+                        Evento evento = eventos.get(i);
+                        String linha[] = new String[6];
+                        linha[0] = alunoMap.getNome();
+                        linha[1] = alunoMap.getMatricula();
+                        linha[2] = alunoMap.getTurma();
+                        linha[3] = alunoMap.getTurno();
+                        linha[4] = evento.getDataHoraPorExtenso();
+                        linha[5] = alerta.getTipoAlertaDescricao();
+                        modelo.addRow(linha);
+                    }
+
+                }
+            } else if (respostaConsultaCalendar.size() > 0) {
+                Set<Aluno> keys = respostaConsultaCalendar.keySet();
+                for (Aluno alunoMap : keys) {
+                    List<Calendar> dias = new ArrayList<Calendar>();
+                    dias = respostaConsultaCalendar.get(alunoMap);
+                    for (int i = 0; i < dias.size(); i++) {
+                        Calendar dia = dias.get(i);
+                        String linha[] = new String[6];
+                        linha[0] = alunoMap.getNome();
+                        linha[1] = alunoMap.getMatricula();
+                        linha[2] = alunoMap.getTurma();
+                        linha[3] = alunoMap.getTurma();
+                        linha[4] = consultas.getDataHoraPorExtenso(dia);
+                        linha[5] = alerta.getTipoAlertaDescricao();
+                        modelo.addRow(linha);
+                    }
+
+                }
+
+            }
         }
     }
 

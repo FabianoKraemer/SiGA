@@ -56,7 +56,7 @@ public class Teste {
         DataFinal.set(Calendar.SECOND, 0);
         DataFinal.set(Calendar.MILLISECOND, 0);
 
-        consultas.faltasConsecutivasEmDeterminadoDia(null, DataInicial, DataFinal,3,DayOfWeek.TUESDAY);
+        //consultas.faltasConsecutivasEmDeterminadoDia(null, null, DataInicial, DataFinal,3,DayOfWeek.TUESDAY);
 
         /*System.out.println(" Eventos com 10 minutos de atraso: " + consultas.consultaEventosComAtrasoDeEntrada(null, null, 10).toString());        
         System.out.println(" Eventos com 20 minutos de atraso: " + consultas.consultaEventosComAtrasoDeEntrada(null, null, 20).toString());        
