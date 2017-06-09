@@ -13,9 +13,13 @@ import arquivos.ExtraiDados;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -159,14 +164,36 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
         // TODO add your handling code here:
-        Document documento = new Document();
+        iText();
+        
+        
 
+
+    }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
+
+    private void iText(){
+        Document documento = new Document();
+        
+        DefaultTableModel modelo =  (DefaultTableModel)jTable1.getModel();
+      
+        String linha[] = new String[6];
+                   
         try {
             PdfWriter.getInstance(documento, new FileOutputStream("documento.pdf"));
             
             documento.open();
-            documento.add(new Paragraph("opa opa opa"));
-                    
+            
+            documento.add(new Paragraph("            Nome             |  Matricula  |   Turma  |   Turno  |   Data  |   Informação"));
+            
+            for(int i = 0; i < modelo.getRowCount(); i++){
+                String row = modelo.getValueAt(i, 0).toString() + "  |  " +
+                             modelo.getValueAt(i, 1).toString() + "   |  " +
+                             modelo.getValueAt(i, 2).toString() + " | " +
+                             modelo.getValueAt(i, 3).toString() + " |  " +
+                             modelo.getValueAt(i, 4).toString() + " | " +
+                             modelo.getValueAt(i, 5).toString();
+                documento.add(new Paragraph(row));              
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
@@ -174,10 +201,16 @@ public class Principal extends javax.swing.JFrame {
         } finally {
             documento.close();
         }
-
-
-    }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
-
+        
+        //abrindo documento
+        try {
+            Desktop.getDesktop().open(new File("documento.pdf"));
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
