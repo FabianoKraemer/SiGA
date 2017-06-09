@@ -54,6 +54,8 @@ public class Principal extends javax.swing.JFrame {
     private ArrayList<Alerta> Alertas = new ArrayList<Alerta>();
     private ExtraiDados extrair = new ExtraiDados(null, null, null);
     private Consultas consultas = new Consultas(extrair.getEventos(), extrair.getAlunos());
+    private int rem; //variavel que vai ter a posicao da linha que deseja remover
+    private int[] remover; //recebe um int[] das linhas que foram clicadas quando se deseja remover
 
     public Principal() {
         initComponents();
@@ -76,6 +78,7 @@ public class Principal extends javax.swing.JFrame {
         jBGerarRelatorios = new javax.swing.JButton();
         jBSalvarAlertas = new javax.swing.JButton();
         jBCarregarAlertas = new javax.swing.JButton();
+        jBRemoverAlerta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -89,6 +92,11 @@ public class Principal extends javax.swing.JFrame {
             },
             new String [] {"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jTable1MouseReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jBCriarFiltros.setText("Criar Alertas");
@@ -120,6 +128,14 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jBRemoverAlerta.setText("Remover Alerta");
+        jBRemoverAlerta.setEnabled(false);
+        jBRemoverAlerta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBRemoverAlertaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,8 +157,10 @@ public class Principal extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jBSalvarAlertas)
                                 .addGap(18, 18, 18)
-                                .addComponent(jBCarregarAlertas)))
-                        .addContainerGap(264, Short.MAX_VALUE))))
+                                .addComponent(jBCarregarAlertas)
+                                .addGap(18, 18, 18)
+                                .addComponent(jBRemoverAlerta)))
+                        .addContainerGap(104, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,7 +174,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jBCriarFiltros)
                     .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jBSalvarAlertas)
-                    .addComponent(jBCarregarAlertas))
+                    .addComponent(jBCarregarAlertas)
+                    .addComponent(jBRemoverAlerta))
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
@@ -361,6 +380,20 @@ public class Principal extends javax.swing.JFrame {
         lerAlertas();
     }//GEN-LAST:event_jBCarregarAlertasActionPerformed
 
+    private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
+        // TODO add your handling code here:
+        remover = new int[jTable1.getSelectedRowCount()];
+        remover = jTable1.getSelectedRows();
+
+        // habilitando o botão que permitirá remover as linhas selecionadas
+        jBRemoverAlerta.setEnabled(true); 
+    }//GEN-LAST:event_jTable1MouseReleased
+
+    private void jBRemoverAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRemoverAlertaActionPerformed
+        // TODO add your handling code here:
+        excluirAlerta();
+    }//GEN-LAST:event_jBRemoverAlertaActionPerformed
+
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
@@ -497,10 +530,18 @@ public class Principal extends javax.swing.JFrame {
     }
     
     private void excluirAlerta(){
-        
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+              
+        rem = remover.length;
         
+        while(rem > 0){
+            modelo.removeRow(remover[rem-1]);
+            rem--;
+        }
         
+        //sempre desativa o botao de remover depois que ocorre uma remoção
+        jBRemoverAlerta.setEnabled(false);
+     
     }
 
     /**
@@ -542,6 +583,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton jBCarregarAlertas;
     private javax.swing.JButton jBCriarFiltros;
     private javax.swing.JButton jBGerarRelatorios;
+    private javax.swing.JButton jBRemoverAlerta;
     private javax.swing.JButton jBSalvarAlertas;
     private javax.swing.JLabel jLUsuario;
     private javax.swing.JLabel jLUsuarioLogado;

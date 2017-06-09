@@ -45,9 +45,11 @@
                               <Component id="jBSalvarAlertas" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jBCarregarAlertas" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jBRemoverAlerta" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="264" max="32767" attributes="0"/>
+                      <EmptySpace pref="104" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -67,6 +69,7 @@
                   <Component id="jBGerarRelatorios" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jBSalvarAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jBCarregarAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jBRemoverAlerta" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="416" max="32767" attributes="0"/>
@@ -93,6 +96,9 @@
               <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;    },&#xa;    new String [] {&quot;Nome&quot;, &quot;Matr&#xed;cula&quot;, &quot;Turma&quot;, &quot;Turno&quot;, &quot;Data&quot;, &quot;Informa&#xe7;&#xe3;o&quot;}&#xa;)" type="code"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable1MouseReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -129,6 +135,15 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBCarregarAlertasActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jBRemoverAlerta">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Remover Alerta"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBRemoverAlertaActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
