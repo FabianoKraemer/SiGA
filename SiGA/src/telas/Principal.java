@@ -10,6 +10,12 @@ import arquivos.Aluno;
 import arquivos.Consultas;
 import arquivos.Evento;
 import arquivos.ExtraiDados;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -151,6 +159,21 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
         // TODO add your handling code here:
+        Document documento = new Document();
+
+        try {
+            PdfWriter.getInstance(documento, new FileOutputStream("documento.pdf"));
+            
+            documento.open();
+            documento.add(new Paragraph("opa opa opa"));
+                    
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DocumentException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            documento.close();
+        }
 
 
     }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
