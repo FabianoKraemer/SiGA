@@ -47,9 +47,11 @@
                               <Component id="jBCarregarAlertas" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jBRemoverAlerta" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                              <Component id="jBGerirAlertas" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="104" max="32767" attributes="0"/>
+                      <EmptySpace pref="92" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -70,6 +72,7 @@
                   <Component id="jBSalvarAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jBCarregarAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jBRemoverAlerta" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jBGerirAlertas" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="416" max="32767" attributes="0"/>
@@ -105,6 +108,7 @@
     <Component class="javax.swing.JButton" name="jBCriarFiltros">
       <Properties>
         <Property name="text" type="java.lang.String" value="Criar Alertas"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBCriarFiltrosActionPerformed"/>
@@ -124,6 +128,7 @@
     <Component class="javax.swing.JButton" name="jBSalvarAlertas">
       <Properties>
         <Property name="text" type="java.lang.String" value="Salvar Alertas"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBSalvarAlertasActionPerformed"/>
@@ -132,6 +137,7 @@
     <Component class="javax.swing.JButton" name="jBCarregarAlertas">
       <Properties>
         <Property name="text" type="java.lang.String" value="Carregar Alertas"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBCarregarAlertasActionPerformed"/>
@@ -144,6 +150,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBRemoverAlertaActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jBGerirAlertas">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Gerenciar Alertas"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jBGerirAlertasActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

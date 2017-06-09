@@ -5,6 +5,7 @@
  */
 package telas;
 
+import arquivos.Usuario;
 import javax.swing.JOptionPane;
 import siga.Senhas;
 
@@ -116,7 +117,11 @@ public class Login extends javax.swing.JFrame {
         Senhas senhas = new Senhas(this.login, this.senha);
         if(senhas.VerificaSenha()){
             Principal prin = new Principal();
-            prin.usuario(this.login);
+            
+            Usuario usuario = new Usuario();
+            usuario.setLogin(this.login);
+            
+            prin.setUsuario(usuario);
             prin.setVisible(true);
             this.setVisible(false);
             

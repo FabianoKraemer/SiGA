@@ -435,6 +435,7 @@ public class CadastrarAlerta extends JDialog {
         switch (jTabbedPane1.getSelectedIndex()) {
             case 0:
                 alerta = new Alerta();
+                alerta.setCodigo(java.util.UUID.randomUUID());
                 alerta.setTipoAlertaDescricao("Falta por Aluno");
                 alerta.setTipoAlerta(0);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
@@ -453,6 +454,7 @@ public class CadastrarAlerta extends JDialog {
 
             case 1:
                 alerta = new Alerta();
+                alerta.setCodigo(java.util.UUID.randomUUID());
                 alerta.setTipoAlertaDescricao("Falta por Turma " + jCBTurma.getSelectedItem().toString());
                 alerta.setTipoAlerta(1);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
@@ -471,6 +473,7 @@ public class CadastrarAlerta extends JDialog {
 
             case 2:
                 alerta = new Alerta();
+                alerta.setCodigo(java.util.UUID.randomUUID());
                 alerta.setTipoAlertaDescricao("Entrada Atrasada de " + Integer.parseInt(jTFMinutosAtraso.getText())+ " minutos por "+ Integer.parseInt(jTFQuantidadeDeDiasAtraso.getText()) + " dias");
                 alerta.setTipoAlerta(2);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
@@ -480,6 +483,7 @@ public class CadastrarAlerta extends JDialog {
 
             case 3:
                 alerta = new Alerta();
+                alerta.setCodigo(java.util.UUID.randomUUID());
                 alerta.setTipoAlertaDescricao("Saida Adiantada de " + Integer.parseInt(jTFMinutosAdianto.getText())+ " minutos por "+ Integer.parseInt(jTFQuantidadeDeDiasAdianto.getText()) + " dias");
                 alerta.setTipoAlerta(3);
                 alerta.setDescricaoAlerta(jTFDescricao.getText());
@@ -493,6 +497,7 @@ public class CadastrarAlerta extends JDialog {
 
     private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
         // TODO add your handling code here:
+        this.alerta = null;
         dispose();
     }//GEN-LAST:event_jBCancelarActionPerformed
 

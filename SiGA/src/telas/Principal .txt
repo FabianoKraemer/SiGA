@@ -10,7 +10,6 @@ import arquivos.Aluno;
 import arquivos.Consultas;
 import arquivos.Evento;
 import arquivos.ExtraiDados;
-import arquivos.Usuario;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -51,12 +50,10 @@ public class Principal extends javax.swing.JFrame {
      * Creates new form Principal
      */
     private String usuarioLogado;
-    private Usuario usuario;
+
     private ArrayList<Alerta> Alertas = new ArrayList<Alerta>();
     private ExtraiDados extrair = new ExtraiDados(null, null, null);
     private Consultas consultas = new Consultas(extrair.getEventos(), extrair.getAlunos());
-    private int rem; //variavel que vai ter a posicao da linha que deseja remover
-    private int[] remover; //recebe um int[] das linhas que foram clicadas quando se deseja remover
 
     public Principal() {
         initComponents();
@@ -78,9 +75,6 @@ public class Principal extends javax.swing.JFrame {
         jBCriarFiltros = new javax.swing.JButton();
         jBGerarRelatorios = new javax.swing.JButton();
         jBSalvarAlertas = new javax.swing.JButton();
-        jBCarregarAlertas = new javax.swing.JButton();
-        jBRemoverAlerta = new javax.swing.JButton();
-        jBGerirAlertas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -91,18 +85,18 @@ public class Principal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
-            new String [] {"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
-        ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                jTable1MouseReleased(evt);
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        });
+        ));
         jScrollPane1.setViewportView(jTable1);
 
         jBCriarFiltros.setText("Criar Alertas");
-        jBCriarFiltros.setEnabled(false);
         jBCriarFiltros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBCriarFiltrosActionPerformed(evt);
@@ -118,33 +112,9 @@ public class Principal extends javax.swing.JFrame {
         });
 
         jBSalvarAlertas.setText("Salvar Alertas");
-        jBSalvarAlertas.setEnabled(false);
         jBSalvarAlertas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBSalvarAlertasActionPerformed(evt);
-            }
-        });
-
-        jBCarregarAlertas.setText("Carregar Alertas");
-        jBCarregarAlertas.setEnabled(false);
-        jBCarregarAlertas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBCarregarAlertasActionPerformed(evt);
-            }
-        });
-
-        jBRemoverAlerta.setText("Remover Alerta");
-        jBRemoverAlerta.setEnabled(false);
-        jBRemoverAlerta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBRemoverAlertaActionPerformed(evt);
-            }
-        });
-
-        jBGerirAlertas.setText("Gerenciar Alertas");
-        jBGerirAlertas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBGerirAlertasActionPerformed(evt);
             }
         });
 
@@ -167,14 +137,8 @@ public class Principal extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jBSalvarAlertas)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBCarregarAlertas)
-                                .addGap(18, 18, 18)
-                                .addComponent(jBRemoverAlerta)
-                                .addGap(35, 35, 35)
-                                .addComponent(jBGerirAlertas)))
-                        .addContainerGap(92, Short.MAX_VALUE))))
+                                .addComponent(jBSalvarAlertas)))
+                        .addContainerGap(434, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,10 +151,7 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBCriarFiltros)
                     .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBSalvarAlertas)
-                    .addComponent(jBCarregarAlertas)
-                    .addComponent(jBRemoverAlerta)
-                    .addComponent(jBGerirAlertas))
+                    .addComponent(jBSalvarAlertas))
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
@@ -204,7 +165,6 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         this.setSize(1280, 720);
-        lerAlertas();
         /*  jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
                 new String[]{"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
@@ -391,39 +351,6 @@ public class Principal extends javax.swing.JFrame {
         salvarAlertas();
     }//GEN-LAST:event_jBSalvarAlertasActionPerformed
 
-    private void jBCarregarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCarregarAlertasActionPerformed
-        // TODO add your handling code here:
-        lerAlertas();
-    }//GEN-LAST:event_jBCarregarAlertasActionPerformed
-
-    private void jTable1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseReleased
-        // TODO add your handling code here:
-        remover = new int[jTable1.getSelectedRowCount()];
-        remover = jTable1.getSelectedRows();
-
-        // habilitando o botão que permitirá remover as linhas selecionadas
-        jBRemoverAlerta.setEnabled(true);
-    }//GEN-LAST:event_jTable1MouseReleased
-
-    private void jBRemoverAlertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRemoverAlertaActionPerformed
-        // TODO add your handling code here:
-        excluirAlerta();
-    }//GEN-LAST:event_jBRemoverAlertaActionPerformed
-
-    private void jBGerirAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerirAlertasActionPerformed
-        // TODO add your handling code here:
-        GerirAlertas gerirAlertas = new GerirAlertas(this,"Gerenciar Alertas",rootPaneCheckingEnabled, this.usuario);
-
-        gerirAlertas.setVisible(true);
-
-        if (gerirAlertas.getAlertas() != null) {
-            Alertas.clear();
-            Alertas = gerirAlertas.getAlertas();
-            processaAlertas();
-        }        
-
-    }//GEN-LAST:event_jBGerirAlertasActionPerformed
-
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
@@ -502,9 +429,8 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-        this.usuarioLogado = usuario.getLogin();
+    public void usuario(String usuario) {
+        this.usuarioLogado = usuario;
         jLUsuario.setText(this.usuarioLogado);
     }
 
@@ -538,46 +464,21 @@ public class Principal extends javax.swing.JFrame {
 
     private void lerAlertas() {
         File arquivo = new File("alertas.dat");
-
-        try {
+        /*
+        try{
             FileInputStream fin = new FileInputStream(arquivo);
             ObjectInputStream oin = new ObjectInputStream(fin);
-
+            
             //ler objetos de um arquivo
             ArrayList<Alerta> alertasFile = new ArrayList<Alerta>();
-            alertasFile = (ArrayList<Alerta>) oin.readObject();
-
+            alertasFile = (ArrayList<Alerta>Alertas[]) oin.readObject();
+            
             oin.close(); //fechar o fluxo de entrada
             fin.close(); //fechar arquivo
-
-            for (Alerta alerta : alertasFile) {
-                if (alerta.getLoginUsuario().equals(usuario.getLogin())) {
-                    this.Alertas.add(alerta);
-                }
-            }
             
-            processaAlertas();
-
-            System.out.println("tamanho array: " + alertasFile.size());
-        } catch (IOException | ClassNotFoundException ex) {
-            System.out.println("erro: " + ex.toString());
-        }
-
-    }
-
-    private void excluirAlerta() {
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-
-        rem = remover.length;
-
-        while (rem > 0) {
-            modelo.removeRow(remover[rem - 1]);
-            rem--;
-        }
-
-        //sempre desativa o botao de remover depois que ocorre uma remoção
-        jBRemoverAlerta.setEnabled(false);
-
+            
+        } catch (IOException | ClassNotFoundException ex) {System.out.println("erro: " + ex.toString());}
+         */
     }
 
     /**
@@ -616,11 +517,8 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jBCarregarAlertas;
     private javax.swing.JButton jBCriarFiltros;
     private javax.swing.JButton jBGerarRelatorios;
-    private javax.swing.JButton jBGerirAlertas;
-    private javax.swing.JButton jBRemoverAlerta;
     private javax.swing.JButton jBSalvarAlertas;
     private javax.swing.JLabel jLUsuario;
     private javax.swing.JLabel jLUsuarioLogado;

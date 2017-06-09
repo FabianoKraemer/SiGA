@@ -7,13 +7,15 @@ package arquivos;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
  *
  * @author aluno
  */
 public class Alerta implements Serializable{
-
+    private UUID codigo;
+    private String loginUsuario;
     private int tipoAlerta;
     private String tipoAlertaDescricao;
     private String descricaoAlerta;
@@ -30,6 +32,24 @@ public class Alerta implements Serializable{
     private int quantidadeMinimaDeDiasDeAtraso;
     private int quantidadeMinimaDeDiasDeAdianto;
 
+    public UUID getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(UUID codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getLoginUsuario() {
+        return loginUsuario;
+    }
+
+    public void setLoginUsuario(String loginUsuario) {
+        this.loginUsuario = loginUsuario;
+    }
+
+    
+    
     public String getTipoAlertaDescricao() {
         return tipoAlertaDescricao;
     }
