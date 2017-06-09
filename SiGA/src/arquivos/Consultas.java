@@ -6,6 +6,7 @@
 package arquivos;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -68,7 +69,7 @@ public class Consultas {
         return f.format(calendario.getTime()).toString();
     }
 
-    public Map<Aluno, List<Calendar>> listaDiasComFaltas(String Curso, String Turma, Calendar DataInicial, Calendar DataFinal) {
+    public Map<Aluno, List<Calendar>> listaDiasComFaltas(Calendar DataInicial, Calendar DataFinal) {
 
         Map<Aluno, List<Calendar>> mapaResposta = new HashMap<Aluno, List<Calendar>>();
         List<Calendar> diasCorridos = getDaysBetweenDates(DataInicial, DataFinal);
@@ -96,7 +97,7 @@ public class Consultas {
                             mapaResposta.put(aluno, listaCalendario);
                         }
                         mapaResposta.get(aluno).add(dia);
-                        //System.out.println(aluno.getNome() + " --- " + getDataHoraPorExtenso(dia).toString());
+                        System.out.println(aluno.getNome() + " --- " + getDataHoraPorExtenso(dia).toString());
                     }
                 }
             };
@@ -113,13 +114,73 @@ public class Consultas {
 		Lista de datas com dias consecutivos em que o Aluno não teve registros de Entrada ou Saída em Datas Consecutivas e que não seja Sábado ou Domingo;0,
 	
      */
- /*
+    public Map<Aluno, List<Calendar>> faltasConsecutivas(String Turma, String Aluno, Calendar DataInicial, Calendar DataFinal, int QuantidadeConsecutivaFaltas) {
+        Map<Aluno, List<Calendar>> resposta = listaDiasComFaltas(DataInicial, DataFinal);
+
+        //Remove Alunos que ainda não tem a quantidade de dias especificado
+        for (Iterator<Map.Entry<Aluno, List<Calendar>>> it = resposta.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Aluno, List<Calendar>> entry = it.next();
+            List<Calendar> listaDiasConsecutivosResposta = new ArrayList<Calendar>();
+            List<Calendar> listaDiasConsecutivos = new ArrayList<Calendar>();
+            List<Calendar> listaDias = entry.getValue();
+
+            for (Calendar calendario : listaDias) {
+                if (listaDiasConsecutivos.size() == 0) {
+                    listaDiasConsecutivos.add(calendario);
+                } else {
+                    Calendar ultimoDia = listaDiasConsecutivos.get(listaDiasConsecutivos.size() - 1);
+                    ultimoDia.add(Calendar.DAY_OF_MONTH, 1);
+                    if (calendario.equals(ultimoDia)) {
+                        listaDiasConsecutivos.add(calendario);
+                    } else {
+
+                        if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
+                            listaDiasConsecutivosResposta = listaDiasConsecutivos;
+                        }
+                        listaDiasConsecutivos.clear();
+                    }
+                    if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
+                        listaDiasConsecutivosResposta.clear();
+                        for (Calendar calendarioCons : listaDiasConsecutivos) {
+                            listaDiasConsecutivosResposta.add(calendarioCons);
+                        }
+                    };
+                }
+            }
+            if (listaDiasConsecutivosResposta.size() < QuantidadeConsecutivaFaltas) {
+                it.remove();
+            } else if (Aluno != null && !entry.getKey().getNome().equals(Aluno)) {
+                it.remove();
+            } else if (Turma != null && !entry.getKey().getTurma().equals(Turma)) {
+                it.remove();
+            }
+        }
+
+        Set<Aluno> keys = resposta.keySet();
+        for (Aluno alunoMap : keys) {
+            System.out.println("Aluno : " + alunoMap.getNome());
+            for (Calendar evento : resposta.get(alunoMap)) {
+                System.out.println("    Evento: " + getDataHoraPorExtenso(evento));
+            }
+        }
+
+        return resposta;
+    }
+
+    /*
     Consulta 2 - Faltas Consecutivas em Determinado Dia da Semana
 	Entrada:
 		1 - Curso; 2 - Turma; 3 - Disciplina; 4 - Data Inicial da Consulta;		5 - Quantidade de Faltas Consecutivas por Dia da Semana;  6 - Aluno (opcional);
  
 	Saída:
 		Lista de datas que houveram faltas consecutivas em Disciplinas que possuem horário no dia da semana informado;
+     */
+    public Map<Aluno, List<Calendar>> faltasConsecutivasEmDeterminadoDia(String Turma, Calendar DataInicial, Calendar DataFinal, int QuantidadeConsecutivaFaltas, DayOfWeek DiaDaSemana) {
+
+        return listaDiasComFaltas(DataInicial, DataFinal);
+    }
+
+    /*
  
     Consulta 3 - Quantidade Total de Faltas
 	Entrada:
@@ -128,13 +189,13 @@ public class Consultas {
 	Saída:
 		Lista de datas que houveram faltas que não seja Sábado ou Domingo;
      */
-    public Map<Aluno, List<Calendar>> quantidadeTotalDiasComFaltas(String Curso, String Turma, Calendar DataInicial, Calendar DataFinal) {
-             
-        return  listaDiasComFaltas(Curso, Turma, DataInicial, DataFinal);
+    public Map<Aluno, List<Calendar>> quantidadeTotalDiasComFaltas(String Turma, Calendar DataInicial, Calendar DataFinal) {
+
+        return listaDiasComFaltas(DataInicial, DataFinal);
     }
 
     //Consultas Baseadas em Eventos
-    private List<Evento> consultaEventosComAtrasoDeEntrada(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
+    private List<Evento> consultaEventosComAtrasoDeEntrada(String Turma, long MinutosDeAtrasoDeEntrada) {
 
         List<Evento> eventosResposta = getEventos().stream().filter(p -> p.getEntradaAtrasada()
                 && p.getMinutosAtrasados() >= MinutosDeAtrasoDeEntrada
@@ -143,7 +204,7 @@ public class Consultas {
         return eventosResposta;
     }
 
-    private List<Evento> consultaEventosComAdiantoDeSaida(String Curso, String Turma, long MinutosDeAdiantoDeSaida) {
+    private List<Evento> consultaEventosComAdiantoDeSaida(String Turma, long MinutosDeAdiantoDeSaida) {
 
         List<Evento> eventosResposta = getEventos().stream().filter(p -> p.getSaidaAdiantada()
                 && p.getMinutosAdiantados() >= MinutosDeAdiantoDeSaida).collect(Collectors.toList());
@@ -163,9 +224,9 @@ Consulta 4 - Quantidade de Dias com Determinado Minutos de Atraso
             Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Início da Disciplina e o registro de Entrada da Catraca;
  
      */
-    public Map<Aluno, List<Evento>> consultaAlunosComAtrasoDeEntrada(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
+    public Map<Aluno, List<Evento>> consultaAlunosComAtrasoDeEntrada(String Turma, long MinutosDeAtrasoDeEntrada) {
 
-        List<Evento> listaEventos = consultaEventosComAtrasoDeEntrada(Curso, Turma, MinutosDeAtrasoDeEntrada);
+        List<Evento> listaEventos = consultaEventosComAtrasoDeEntrada(Turma, MinutosDeAtrasoDeEntrada);
 
         Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
 
@@ -192,9 +253,9 @@ Consulta 5 - Quantidade de Dias Superior ao Informado com Determinado Minutos de
             Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Início da Disciplina e o registro de Entrada da Catraca;
      
      */
-    public Map<Aluno, List<Evento>> consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(String Curso, String Turma, long MinutosDeAtrasoDeEntrada, int quantidadeDeDias) {
+    public Map<Aluno, List<Evento>> consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(String Turma, long MinutosDeAtrasoDeEntrada, int quantidadeDeDias) {
 
-        List<Evento> listaEventos = consultaEventosComAtrasoDeEntrada(Curso, Turma, MinutosDeAtrasoDeEntrada);
+        List<Evento> listaEventos = consultaEventosComAtrasoDeEntrada(Turma, MinutosDeAtrasoDeEntrada);
 
         Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
 
@@ -227,9 +288,9 @@ Consulta 6 - Quantidade de Dias com Determinado Minutos de Saída Adiantada
 	Saída:
             Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Fim da Disciplina e o registro de Saída da Catraca;
      */
-    public Map<Aluno, List<Evento>> consultaAlunosComAdiantoDeSaida(String Curso, String Turma, long MinutosDeAtrasoDeEntrada) {
+    public Map<Aluno, List<Evento>> consultaAlunosComAdiantoDeSaida(String Turma, long MinutosDeAtrasoDeEntrada) {
 
-        List<Evento> listaEventos = consultaEventosComAdiantoDeSaida(Curso, Turma, MinutosDeAtrasoDeEntrada);
+        List<Evento> listaEventos = consultaEventosComAdiantoDeSaida(Turma, MinutosDeAtrasoDeEntrada);
 
         Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
 
@@ -244,9 +305,9 @@ Consulta 7 - Quantidade de Dias Superior ao Informado com Determinado Minutos de
 	Saída:
             Lista de datas que houveram uma diferença de quantidade de Minutos superior à informada entre o Horário de Fim da Disciplina e o registro de Saída da Catraca;
      */
-    public Map<Aluno, List<Evento>> consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(String Curso, String Turma, long MinutosDeAtrasoDeEntrada, int quantidadeDeDias) {
+    public Map<Aluno, List<Evento>> consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(String Turma, long MinutosDeAtrasoDeEntrada, int quantidadeDeDias) {
 
-        List<Evento> listaEventos = consultaEventosComAdiantoDeSaida(Curso, Turma, MinutosDeAtrasoDeEntrada);
+        List<Evento> listaEventos = consultaEventosComAdiantoDeSaida(Turma, MinutosDeAtrasoDeEntrada);
 
         Map<Aluno, List<Evento>> groupByAluno = listaEventos.stream().collect(Collectors.groupingBy(Evento::getAluno));
 

@@ -26,7 +26,7 @@ public class Teste {
         ExtraiDados extrair = new ExtraiDados(null, null, null);
         Consultas consultas = new Consultas(extrair.getEventos(), extrair.getAlunos());
 
-        Map<Aluno, List<Evento>> resultado = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(null, null, 10, 1);
+        Map<Aluno, List<Evento>> resultado = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias( null, 10, 1);
 
         Set<Aluno> keys = resultado.keySet();
         for (Aluno alunoMap : keys) {
@@ -48,14 +48,14 @@ public class Teste {
         DataInicial.set(Calendar.SECOND, 0);
         DataInicial.set(Calendar.MILLISECOND, 0);
         
-        DataFinal.set(Calendar.DAY_OF_MONTH, 5);
+        DataFinal.set(Calendar.DAY_OF_MONTH, 7);
         DataFinal.set(Calendar.MONTH, 3);
         DataFinal.set(Calendar.HOUR_OF_DAY, 0);
         DataFinal.set(Calendar.MINUTE, 0);
         DataFinal.set(Calendar.SECOND, 0);
         DataFinal.set(Calendar.MILLISECOND, 0);
 
-        consultas.listaDiasComFaltas(null, null, DataInicial, DataFinal);
+        consultas.faltasConsecutivas(null, null, DataInicial, DataFinal,2);
 
         /*System.out.println(" Eventos com 10 minutos de atraso: " + consultas.consultaEventosComAtrasoDeEntrada(null, null, 10).toString());        
         System.out.println(" Eventos com 20 minutos de atraso: " + consultas.consultaEventosComAtrasoDeEntrada(null, null, 20).toString());        

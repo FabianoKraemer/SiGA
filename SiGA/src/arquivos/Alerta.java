@@ -5,6 +5,8 @@
  */
 package arquivos;
 
+import java.util.Calendar;
+
 /**
  *
  * @author aluno
@@ -15,6 +17,8 @@ public class Alerta {
     private String descricaoAlerta;
     private String nomeAluno;
     private int quantidadeMinimaDeDiasDeFalta;
+    private Calendar DataInicial;
+    private Calendar DataFinal;    
     private boolean consecutivo;
     private String diaEspecifico;
     private String turma;
@@ -22,6 +26,22 @@ public class Alerta {
     private int minutosAdianto;
     private int quantidadeMinimaDeDiasDeAtraso;
     private int quantidadeMinimaDeDiasDeAdianto;
+
+    public Calendar getDataInicial() {
+        return DataInicial;
+    }
+
+    public void setDataInicial(Calendar DataInicial) {
+        this.DataInicial = DataInicial;
+    }
+
+    public Calendar getDataFinal() {
+        return DataFinal;
+    }
+
+    public void setDataFinal(Calendar DataFinal) {
+        this.DataFinal = DataFinal;
+    }
 
     public String getDescricaoAlerta() {
         return descricaoAlerta;
