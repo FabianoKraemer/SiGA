@@ -142,7 +142,7 @@ public class Evento {
     }
 
     public String getDataHoraPorExtenso() {
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return f.format(getDataHora().getTime()).toString();
     }
 

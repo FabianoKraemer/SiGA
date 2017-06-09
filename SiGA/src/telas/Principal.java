@@ -12,8 +12,12 @@ import arquivos.Evento;
 import arquivos.ExtraiDados;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PRIndirectReference;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Desktop;
 import java.io.File;
@@ -159,14 +163,15 @@ public class Principal extends javax.swing.JFrame {
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
+
         this.setSize(1280, 720);
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        /*  jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
                 new String[]{"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
         ));
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
 
-        modelo.setRowCount(0);
+        modelo.setRowCount(0);*/
     }//GEN-LAST:event_formWindowActivated
 
     private void jBCriarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCriarFiltrosActionPerformed
@@ -183,65 +188,169 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
         // TODO add your handling code here:
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        
-        if(modelo.getRowCount() == 0){
-            JOptionPane.showMessageDialog(this, "Não há nenhum alerta criado");
-            return;
-        }
-        
-        iText();
-        
-        
 
+        CadastrarAlerta cadastrarAlerta = new CadastrarAlerta(this, "Criar Alerta", rootPaneCheckingEnabled);
+        //this.setEnabled(false);
+        cadastrarAlerta.setVisible(true);
+
+        if (cadastrarAlerta.getAlerta() != null) {
+            Alerta alerta = cadastrarAlerta.getAlerta();
+
+            Map<Aluno, List<Evento>> respostaConsultaEvento = new HashMap<Aluno, List<Evento>>();
+            Map<Aluno, List<Calendar>> respostaConsultaCalendar = new HashMap<Aluno, List<Calendar>>();
+
+            switch (alerta.getTipoAlerta()) {
+                case 0: //consulta Faltas por aluno
+                    if (alerta.isDiaEspecificoEscolhido()) {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), DayOfWeek.of(alerta.getDiaEspecifico()), alerta.isConsecutivo());
+                    } else {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), null, alerta.isConsecutivo());
+                    }
+                    break;
+                case 1: // consulta Faltas por turma
+                    if (alerta.isDiaEspecificoEscolhido()) {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), DayOfWeek.of(alerta.getDiaEspecifico()), alerta.isConsecutivo());
+                    } else {
+                        respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), null, alerta.isConsecutivo());
+                    }
+                    break;
+                case 2: // consulta Atrasos
+                    respostaConsultaEvento = consultas.consultaAlunosComAtrasoDeEntradaQuantidadeDeDias(null, alerta.getMinutosAtraso(), alerta.getQuantidadeMinimaDeDiasDeAtraso());
+                    break;
+                case 3: // consulta Adiantos
+                    respostaConsultaEvento = consultas.consultaAlunosComAdiantoDeSaidaQuantidadeDeDias(null, alerta.getMinutosAdianto(), alerta.getQuantidadeMinimaDeDiasDeAdianto());
+                    break;
+            }
+
+            if (respostaConsultaEvento.size() > 0) {
+
+                Document documento = preparaDocumento();
+
+                Set<Aluno> keys = respostaConsultaEvento.keySet();
+                for (Aluno alunoMap : keys) {
+                    List<Evento> eventos = new ArrayList<Evento>();
+                    eventos = respostaConsultaEvento.get(alunoMap);
+                    for (int i = 0; i < eventos.size(); i++) {
+                        Evento evento = eventos.get(i);
+                        String linha[] = new String[6];
+                        linha[0] = alunoMap.getNome();
+                        linha[1] = alunoMap.getMatricula();
+                        linha[2] = alunoMap.getTurma();
+                        linha[3] = alunoMap.getTurno();
+                        linha[4] = evento.getDataHoraPorExtenso();
+                        linha[5] = alerta.getTipoAlertaDescricao();
+                        insereLinhaDocumento(documento, linha);
+                    }
+
+                }
+                finalizaDocumento(documento);
+            } else if (respostaConsultaCalendar.size() > 0) {
+                Document documento = preparaDocumento();
+
+                Set<Aluno> keys = respostaConsultaCalendar.keySet();
+                for (Aluno alunoMap : keys) {
+                    List<Calendar> dias = new ArrayList<Calendar>();
+                    dias = respostaConsultaCalendar.get(alunoMap);
+                    for (int i = 0; i < dias.size(); i++) {
+                        Calendar dia = dias.get(i);
+                        String linha[] = new String[6];
+                        linha[0] = alunoMap.getNome();
+                        linha[1] = alunoMap.getMatricula();
+                        linha[2] = alunoMap.getTurma();
+                        linha[3] = alunoMap.getTurno();
+                        linha[4] = consultas.getDataHoraPorExtenso(dia);
+                        linha[5] = alerta.getTipoAlertaDescricao();
+                        insereLinhaDocumento(documento, linha);
+                    }
+                    finalizaDocumento(documento);
+                }
+
+            }
+
+        }
 
     }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
 
-    private void jBSalvarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalvarAlertasActionPerformed
-        // TODO add your handling code here:
-        salvarAlertas();
-    }//GEN-LAST:event_jBSalvarAlertasActionPerformed
+    private Document preparaDocumento() {
 
-    private void iText(){
         Document documento = new Document();
-        
-        DefaultTableModel modelo =  (DefaultTableModel)jTable1.getModel();
-      
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+
         String linha[] = new String[6];
-                   
+
         try {
             PdfWriter.getInstance(documento, new FileOutputStream("documento.pdf"));
-            
+
             documento.open();
-            
-            documento.add(new Paragraph("            Nome             |  Matricula  |   Turma  |   Turno  |   Data  |   Informação"));
-            
-            for(int i = 0; i < modelo.getRowCount(); i++){
-                String row = modelo.getValueAt(i, 0).toString() + "  |  " +
-                             modelo.getValueAt(i, 1).toString() + "   |  " +
-                             modelo.getValueAt(i, 2).toString() + " | " +
-                             modelo.getValueAt(i, 3).toString() + " |  " +
-                             modelo.getValueAt(i, 4).toString() + " | " +
-                             modelo.getValueAt(i, 5).toString();
-                documento.add(new Paragraph(row));              
+            /* Font font;
+            font = new Font(FontFamily.COURIER);
+             */
+
+            BaseFont bf = null;
+            try {
+                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.EMBEDDED);
+
+            } catch (IOException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            Font font = new Font(bf, 8);
+            //String Cabecalho = String.format("%-20s %s\n", "Nome", "Matricula", "Turma", "Turno", "Data", "Informação");
+            String Cabecalho = String.format("%-20s %-10s %-8s %-5s %-19s %-30s\n", "Nome", "Matricula", "Turma", "Turno", "Data", "Informação");
+            documento.add(new Paragraph(Cabecalho, font));
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DocumentException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            documento.close();
+
         }
-        
+        return documento;
+    }
+
+    private void insereLinhaDocumento(Document documento, String[] linha) {
+        String row = String.format("%-20s %-10s %-8s %-5s %-19s %-30s\n", linha[0], linha[1], linha[2], linha[3], linha[4], linha[5]);
+        /*for (int i = 0; i < linha.length; i++) {
+            row = row + linha[i];
+        }
+         */
+        try {
+            BaseFont bf = null;
+            try {
+                bf = BaseFont.createFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.EMBEDDED);
+
+            } catch (IOException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            Font font = new Font(bf, 8);
+
+            documento.add(new Paragraph(row, font));
+        } catch (DocumentException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void finalizaDocumento(Document documento) {
+        documento.close();
+
         //abrindo documento
         try {
             Desktop.getDesktop().open(new File("documento.pdf"));
         } catch (IOException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
+
+    private void jBSalvarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalvarAlertasActionPerformed
+        // TODO add your handling code here:
+        salvarAlertas();
+    }//GEN-LAST:event_jBSalvarAlertasActionPerformed
+
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
@@ -263,7 +372,6 @@ public class Principal extends javax.swing.JFrame {
                     } else {
                         respostaConsultaCalendar = consultas.listaFaltas(alerta.getTurma(), alerta.getNomeAluno(), alerta.getDataInicial(), alerta.getDataFinal(), alerta.getQuantidadeMinimaDeDiasDeFalta(), null, alerta.isConsecutivo());
                     }
-
                     break;
                 case 1: // consulta Faltas por turma
                     if (alerta.isDiaEspecificoEscolhido()) {
@@ -326,33 +434,35 @@ public class Principal extends javax.swing.JFrame {
         jLUsuario.setText(this.usuarioLogado);
     }
 
-    private void salvarAlertas(){
-        
+    private void salvarAlertas() {
+
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-        
-        if(modelo.getRowCount() == 0){
+
+        if (modelo.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Não há nenhum alerta criado");
             return;
         }
-       
+
         File arquivo = new File("alertas.dat");
-        
-        try{
+
+        try {
             FileOutputStream fout = new FileOutputStream(arquivo);
             ObjectOutputStream oos = new ObjectOutputStream(fout);
-            
+
             //gravando o alerta no arquivo chamado "alertas.dat"
             oos.writeObject(this.Alertas);
-            
+
             oos.flush(); //limpando os dados em buffer
             oos.close(); // fechando fluxo de saída
             fout.close(); // fechando arquivo
-            JOptionPane.showMessageDialog(this, "Arquivo salvo"); 
-        } catch (IOException ex){ System.err.println("erro: " + ex.toString());}
-        
+            JOptionPane.showMessageDialog(this, "Arquivo salvo");
+        } catch (IOException ex) {
+            System.err.println("erro: " + ex.toString());
+        }
+
     }
-    
-    private void lerAlertas(){
+
+    private void lerAlertas() {
         File arquivo = new File("alertas.dat");
         /*
         try{
@@ -368,9 +478,9 @@ public class Principal extends javax.swing.JFrame {
             
             
         } catch (IOException | ClassNotFoundException ex) {System.out.println("erro: " + ex.toString());}
-        */
+         */
     }
-    
+
     /**
      * @param args the command line arguments
      */
