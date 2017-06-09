@@ -5,6 +5,7 @@ import arquivos.Consultas;
 import arquivos.Evento;
 import telas.Login;
 import arquivos.ExtraiDados;
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -49,13 +50,13 @@ public class Teste {
         DataInicial.set(Calendar.MILLISECOND, 0);
         
         DataFinal.set(Calendar.DAY_OF_MONTH, 7);
-        DataFinal.set(Calendar.MONTH, 3);
+        DataFinal.set(Calendar.MONTH, 6);
         DataFinal.set(Calendar.HOUR_OF_DAY, 0);
         DataFinal.set(Calendar.MINUTE, 0);
         DataFinal.set(Calendar.SECOND, 0);
         DataFinal.set(Calendar.MILLISECOND, 0);
 
-        consultas.faltasConsecutivas(null, null, DataInicial, DataFinal,2);
+        consultas.faltasConsecutivasEmDeterminadoDia(null, DataInicial, DataFinal,3,DayOfWeek.TUESDAY);
 
         /*System.out.println(" Eventos com 10 minutos de atraso: " + consultas.consultaEventosComAtrasoDeEntrada(null, null, 10).toString());        
         System.out.println(" Eventos com 20 minutos de atraso: " + consultas.consultaEventosComAtrasoDeEntrada(null, null, 20).toString());        

@@ -52,7 +52,7 @@ public class Consultas {
     Consultas
     Consultas Baseadas em Aluno
      */
-    private static List<Calendar> getDaysBetweenDates(Calendar startdate, Calendar enddate) {
+    private static List<Calendar> getDiasCorridosEntreDuasDatas(Calendar startdate, Calendar enddate) {
         List<Calendar> dates = new ArrayList<Calendar>();
         Calendar calendar = new GregorianCalendar();
         calendar = startdate;
@@ -64,19 +64,59 @@ public class Consultas {
         return dates;
     }
 
+    private static Calendar encontraPrimeiroDiaDaSemanaAPartirDeUmaData(Calendar startDate, Calendar endDate, DayOfWeek DiaDaSemana) {
+        Calendar calendar = new GregorianCalendar();
+        calendar = startDate;
+
+        if (calendar.get(Calendar.DAY_OF_WEEK) == (DiaDaSemana.getValue()+1)) {
+            return calendar;
+        } else {
+            while (calendar.get(Calendar.DAY_OF_WEEK) != (DiaDaSemana.getValue()+1)) {
+                calendar.add(Calendar.DATE, 1);
+            }
+            if (calendar.get(Calendar.DAY_OF_WEEK) == (DiaDaSemana.getValue()+1) && calendar.before(endDate)) {
+                return calendar;
+            }
+        }
+
+        return null;
+    }
+
+    private static List<Calendar> getDiasAlternadosEntreDuasDatas(Calendar startdate, Calendar enddate, DayOfWeek DiaDaSemana) {
+        List<Calendar> dates = new ArrayList<Calendar>();
+        Calendar calendar = new GregorianCalendar();
+        calendar = encontraPrimeiroDiaDaSemanaAPartirDeUmaData(startdate, enddate, DiaDaSemana);
+
+        if (calendar != null) {
+            while (calendar.before(enddate)) {
+                dates.add((Calendar) calendar.clone());
+                calendar.add(Calendar.DATE, 7);
+            }
+            return dates;
+
+        }
+        return null;
+    }
+
     private static String getDataHoraPorExtenso(Calendar calendario) {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return f.format(calendario.getTime()).toString();
     }
 
-    public Map<Aluno, List<Calendar>> listaDiasComFaltas(Calendar DataInicial, Calendar DataFinal) {
+    public Map<Aluno, List<Calendar>> listaDiasComFaltas(Calendar DataInicial, Calendar DataFinal, DayOfWeek DiaDaSemana) {
 
         Map<Aluno, List<Calendar>> mapaResposta = new HashMap<Aluno, List<Calendar>>();
-        List<Calendar> diasCorridos = getDaysBetweenDates(DataInicial, DataFinal);
+        List<Calendar> diasSelecionados;
 
+        if (DiaDaSemana == null) {
+            diasSelecionados = getDiasCorridosEntreDuasDatas(DataInicial, DataFinal);
+        } else {
+            diasSelecionados = getDiasAlternadosEntreDuasDatas(DataInicial, DataFinal, DiaDaSemana);
+        }
+               
         getAlunos().forEach((aluno) -> {
-            for (int contador = 0; contador < diasCorridos.size(); contador++) {
-                Calendar dia = diasCorridos.get(contador);
+            for (int contador = 0; contador < diasSelecionados.size(); contador++) {
+                Calendar dia = diasSelecionados.get(contador);
 
                 if (dia.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && dia.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                     Boolean encontrado = false;
@@ -97,7 +137,7 @@ public class Consultas {
                             mapaResposta.put(aluno, listaCalendario);
                         }
                         mapaResposta.get(aluno).add(dia);
-                        System.out.println(aluno.getNome() + " --- " + getDataHoraPorExtenso(dia).toString());
+                        //System.out.println(aluno.getNome() + " --- " + getDataHoraPorExtenso(dia).toString());
                     }
                 }
             };
@@ -115,7 +155,7 @@ public class Consultas {
 	
      */
     public Map<Aluno, List<Calendar>> faltasConsecutivas(String Turma, String Aluno, Calendar DataInicial, Calendar DataFinal, int QuantidadeConsecutivaFaltas) {
-        Map<Aluno, List<Calendar>> resposta = listaDiasComFaltas(DataInicial, DataFinal);
+        Map<Aluno, List<Calendar>> resposta = listaDiasComFaltas(DataInicial, DataFinal, null);
 
         //Remove Alunos que ainda não tem a quantidade de dias especificado
         for (Iterator<Map.Entry<Aluno, List<Calendar>>> it = resposta.entrySet().iterator(); it.hasNext();) {
@@ -126,12 +166,12 @@ public class Consultas {
 
             for (Calendar calendario : listaDias) {
                 if (listaDiasConsecutivos.size() == 0) {
-                    listaDiasConsecutivos.add(calendario);
+                    listaDiasConsecutivos.add((Calendar) calendario.clone());
                 } else {
                     Calendar ultimoDia = listaDiasConsecutivos.get(listaDiasConsecutivos.size() - 1);
                     ultimoDia.add(Calendar.DAY_OF_MONTH, 1);
                     if (calendario.equals(ultimoDia)) {
-                        listaDiasConsecutivos.add(calendario);
+                        listaDiasConsecutivos.add((Calendar) calendario.clone());
                     } else {
 
                         if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
@@ -142,7 +182,7 @@ public class Consultas {
                     if (listaDiasConsecutivosResposta.size() < listaDiasConsecutivos.size()) {
                         listaDiasConsecutivosResposta.clear();
                         for (Calendar calendarioCons : listaDiasConsecutivos) {
-                            listaDiasConsecutivosResposta.add(calendarioCons);
+                            listaDiasConsecutivosResposta.add((Calendar) calendarioCons.clone());
                         }
                     };
                 }
@@ -154,6 +194,10 @@ public class Consultas {
             } else if (Turma != null && !entry.getKey().getTurma().equals(Turma)) {
                 it.remove();
             }
+
+            /* for (Calendar evento : entry.getValue()) {
+                System.out.println( entry.getKey().getNome() + "    Evento: " + getDataHoraPorExtenso(evento));
+            }*/
         }
 
         Set<Aluno> keys = resposta.keySet();
@@ -177,7 +221,7 @@ public class Consultas {
      */
     public Map<Aluno, List<Calendar>> faltasConsecutivasEmDeterminadoDia(String Turma, Calendar DataInicial, Calendar DataFinal, int QuantidadeConsecutivaFaltas, DayOfWeek DiaDaSemana) {
 
-        return listaDiasComFaltas(DataInicial, DataFinal);
+        return listaDiasComFaltas(DataInicial, DataFinal, DiaDaSemana);
     }
 
     /*
@@ -191,7 +235,7 @@ public class Consultas {
      */
     public Map<Aluno, List<Calendar>> quantidadeTotalDiasComFaltas(String Turma, Calendar DataInicial, Calendar DataFinal) {
 
-        return listaDiasComFaltas(DataInicial, DataFinal);
+        return listaDiasComFaltas(DataInicial, DataFinal, null);
     }
 
     //Consultas Baseadas em Eventos
