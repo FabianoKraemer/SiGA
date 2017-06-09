@@ -5,13 +5,14 @@
  */
 package arquivos;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  *
  * @author aluno
  */
-public class Alerta {
+public class Alerta implements Serializable{
 
     private int tipoAlerta;
     private String tipoAlertaDescricao;

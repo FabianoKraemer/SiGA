@@ -17,9 +17,12 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +70,7 @@ public class Principal extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jBCriarFiltros = new javax.swing.JButton();
         jBGerarRelatorios = new javax.swing.JButton();
+        jBSalvarAlertas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -96,12 +100,17 @@ public class Principal extends javax.swing.JFrame {
         });
 
         jBGerarRelatorios.setText("Gerar Relatórios");
-        jBGerarRelatorios.setMaximumSize(new java.awt.Dimension(125, 25));
-        jBGerarRelatorios.setMinimumSize(new java.awt.Dimension(125, 25));
         jBGerarRelatorios.setPreferredSize(new java.awt.Dimension(130, 27));
         jBGerarRelatorios.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jBGerarRelatoriosActionPerformed(evt);
+            }
+        });
+
+        jBSalvarAlertas.setText("Salvar Alertas");
+        jBSalvarAlertas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBSalvarAlertasActionPerformed(evt);
             }
         });
 
@@ -122,8 +131,10 @@ public class Principal extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jBCriarFiltros)
                                 .addGap(18, 18, 18)
-                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(585, Short.MAX_VALUE))))
+                                .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jBSalvarAlertas)))
+                        .addContainerGap(434, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,19 +146,27 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBCriarFiltros)
-                    .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBSalvarAlertas))
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         // TODO add your handling code here:
         this.setSize(1280, 720);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                null,
+                new String[]{"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
+        ));
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
 
+        modelo.setRowCount(0);
     }//GEN-LAST:event_formWindowActivated
 
     private void jBCriarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCriarFiltrosActionPerformed
@@ -164,12 +183,24 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBGerarRelatoriosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBGerarRelatoriosActionPerformed
         // TODO add your handling code here:
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        
+        if(modelo.getRowCount() == 0){
+            JOptionPane.showMessageDialog(this, "Não há nenhum alerta criado");
+            return;
+        }
+        
         iText();
         
         
 
 
     }//GEN-LAST:event_jBGerarRelatoriosActionPerformed
+
+    private void jBSalvarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSalvarAlertasActionPerformed
+        // TODO add your handling code here:
+        salvarAlertas();
+    }//GEN-LAST:event_jBSalvarAlertasActionPerformed
 
     private void iText(){
         Document documento = new Document();
@@ -295,6 +326,51 @@ public class Principal extends javax.swing.JFrame {
         jLUsuario.setText(this.usuarioLogado);
     }
 
+    private void salvarAlertas(){
+        
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        
+        if(modelo.getRowCount() == 0){
+            JOptionPane.showMessageDialog(this, "Não há nenhum alerta criado");
+            return;
+        }
+       
+        File arquivo = new File("alertas.dat");
+        
+        try{
+            FileOutputStream fout = new FileOutputStream(arquivo);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            
+            //gravando o alerta no arquivo chamado "alertas.dat"
+            oos.writeObject(this.Alertas);
+            
+            oos.flush(); //limpando os dados em buffer
+            oos.close(); // fechando fluxo de saída
+            fout.close(); // fechando arquivo
+            JOptionPane.showMessageDialog(this, "Arquivo salvo"); 
+        } catch (IOException ex){ System.err.println("erro: " + ex.toString());}
+        
+    }
+    
+    private void lerAlertas(){
+        File arquivo = new File("alertas.dat");
+        /*
+        try{
+            FileInputStream fin = new FileInputStream(arquivo);
+            ObjectInputStream oin = new ObjectInputStream(fin);
+            
+            //ler objetos de um arquivo
+            ArrayList<Alerta> alertasFile = new ArrayList<Alerta>();
+            alertasFile = (ArrayList<Alerta>Alertas[]) oin.readObject();
+            
+            oin.close(); //fechar o fluxo de entrada
+            fin.close(); //fechar arquivo
+            
+            
+        } catch (IOException | ClassNotFoundException ex) {System.out.println("erro: " + ex.toString());}
+        */
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -333,6 +409,7 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBCriarFiltros;
     private javax.swing.JButton jBGerarRelatorios;
+    private javax.swing.JButton jBSalvarAlertas;
     private javax.swing.JLabel jLUsuario;
     private javax.swing.JLabel jLUsuarioLogado;
     private javax.swing.JScrollPane jScrollPane1;
