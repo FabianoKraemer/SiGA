@@ -75,6 +75,7 @@ public class Principal extends javax.swing.JFrame {
         jBCriarFiltros = new javax.swing.JButton();
         jBGerarRelatorios = new javax.swing.JButton();
         jBSalvarAlertas = new javax.swing.JButton();
+        jBCarregarAlertas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -85,14 +86,8 @@ public class Principal extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
             },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
+            new String [] {"Nome", "Matrícula", "Turma", "Turno", "Data", "Informação"}
         ));
         jScrollPane1.setViewportView(jTable1);
 
@@ -118,6 +113,13 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jBCarregarAlertas.setText("Carregar Alertas");
+        jBCarregarAlertas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCarregarAlertasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,8 +139,10 @@ public class Principal extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jBSalvarAlertas)))
-                        .addContainerGap(434, Short.MAX_VALUE))))
+                                .addComponent(jBSalvarAlertas)
+                                .addGap(18, 18, 18)
+                                .addComponent(jBCarregarAlertas)))
+                        .addContainerGap(264, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,7 +155,8 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBCriarFiltros)
                     .addComponent(jBGerarRelatorios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jBSalvarAlertas))
+                    .addComponent(jBSalvarAlertas)
+                    .addComponent(jBCarregarAlertas))
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
@@ -351,6 +356,11 @@ public class Principal extends javax.swing.JFrame {
         salvarAlertas();
     }//GEN-LAST:event_jBSalvarAlertasActionPerformed
 
+    private void jBCarregarAlertasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCarregarAlertasActionPerformed
+        // TODO add your handling code here:
+        lerAlertas();
+    }//GEN-LAST:event_jBCarregarAlertasActionPerformed
+
     private void processaAlertas() {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 null,
@@ -462,23 +472,35 @@ public class Principal extends javax.swing.JFrame {
 
     }
 
-    private void lerAlertas() {
+    private void lerAlertas(){
         File arquivo = new File("alertas.dat");
-        /*
+        
         try{
             FileInputStream fin = new FileInputStream(arquivo);
             ObjectInputStream oin = new ObjectInputStream(fin);
             
             //ler objetos de um arquivo
             ArrayList<Alerta> alertasFile = new ArrayList<Alerta>();
-            alertasFile = (ArrayList<Alerta>Alertas[]) oin.readObject();
+            alertasFile = (ArrayList<Alerta>) oin.readObject();
+            
             
             oin.close(); //fechar o fluxo de entrada
             fin.close(); //fechar arquivo
             
+            this.Alertas = alertasFile;
             
+            processaAlertas();
+            
+            System.out.println("tamanho array: " + alertasFile.size());
         } catch (IOException | ClassNotFoundException ex) {System.out.println("erro: " + ex.toString());}
-         */
+        
+    }
+    
+    private void excluirAlerta(){
+        
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        
+        
     }
 
     /**
@@ -517,6 +539,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBCarregarAlertas;
     private javax.swing.JButton jBCriarFiltros;
     private javax.swing.JButton jBGerarRelatorios;
     private javax.swing.JButton jBSalvarAlertas;
